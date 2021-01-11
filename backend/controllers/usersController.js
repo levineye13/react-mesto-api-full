@@ -1,5 +1,5 @@
 const User = require('./../models/user');
-const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const {
   STATUS_OK,
   BAD_REQUEST_ERROR,
@@ -7,6 +7,28 @@ const {
   INTERNAL_SERVER_ERROR,
 } = require('./../utils/constants');
 const { handleError } = require('./../utils/utils');
+
+const login = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findUserByCredentials({ email, password });
+    if (!user) {
+      res.status(401).send({ message: 'Пользователь не найден' });
+      return;
+    }
+    const token = jwt.sign({ _id: user._id }, 'super-secret-key', {
+      expiresIn: '7d',
+    });
+    res.send({ token });
+  } catch (err) {
+    handleError({
+      responce: res,
+      error: err,
+      errorCode: NOT_FOUND_ERROR,
+    });
+  }
+};
 
 /**
  * @param  {Object} req - объект запроса к серверу
@@ -133,6 +155,7 @@ const updateAvatar = async (req, res) => {
 };
 
 module.exports = {
+  login,
   getAllUsers,
   getProfile,
   createUser,
