@@ -1,4 +1,5 @@
 const User = require('./../models/user');
+const bcrypt = require('bcrypt');
 const {
   STATUS_OK,
   BAD_REQUEST_ERROR,
@@ -54,9 +55,16 @@ const getProfile = async (req, res) => {
  * @param  {Object} res - объект ответа сервера
  */
 const createUser = async (req, res) => {
-  const { name, about, avatar } = req.body;
+  const { email, password, name, about, avatar } = req.body;
   try {
-    const newUser = await User.create({ name, about, avatar });
+    const passwordHash = await bcrypt.hash(password, 10);
+    const newUser = await User.create({
+      email,
+      password: passwordHash,
+      name,
+      about,
+      avatar,
+    });
     res.status(STATUS_OK).send(newUser);
   } catch (err) {
     handleError({
