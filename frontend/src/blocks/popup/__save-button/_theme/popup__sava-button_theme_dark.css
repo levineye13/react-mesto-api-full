@@ -1,0 +1,11 @@
+.popup__save-button_theme_dark {
+  margin-top: 216px;
+  background-color: #fff;
+  color: #000;
+}
+
+@media screen and (max-width: 720px) {
+  .popup__save-button_theme_dark {
+    margin-top: 170px;
+  }
+}

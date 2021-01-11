@@ -1,0 +1,8 @@
+.popup__form-field {
+ display: block;
+ position: relative;
+}
+
+.popup__form-field:not(:last-child) {
+	margin-bottom: 40px;
+}

@@ -1,0 +1,9 @@
+.popup__form_theme_dark {
+  background-color: #000;
+}
+
+@media screen and (max-width: 480px) {
+  .popup__form_theme_dark {
+    padding: 0 10px;
+  }
+}

@@ -1,0 +1,22 @@
+.popup__circle_type_error {
+  border: 3px solid #fd0707;
+}
+
+.popup__circle_type_error::before,
+.popup__circle_type_error::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  height: 8px;
+  width: 58px;
+  background-color: #fd0707;
+}
+
+.popup__circle_type_error::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.popup__circle_type_error::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}

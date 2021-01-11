@@ -1,0 +1,10 @@
+.button {
+  cursor: pointer;
+  border: none;
+  outline: none;
+  -webkit-transition: opacity .3s;
+  -moz-transition: opacity .3s;
+  -ms-transition: opacity .3s;
+  -o-transition: opacity .3s;
+  transition: opacity .3s;
+}

@@ -1,0 +1,14 @@
+.popup__circle_type_accept {
+  border: 3px solid #000;
+}
+
+.popup__circle_type_accept::before {
+  content: '\2713';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 80px;
+  font-weight: 500;
+  color: #000;
+}

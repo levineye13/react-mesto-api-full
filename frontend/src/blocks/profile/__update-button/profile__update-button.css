@@ -1,0 +1,23 @@
+.profile__update-button {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0);
+  outline: 0;
+  border: 0;
+  padding: 0;
+  transition: background 0.2s;
+  -webkit-transition: background 0.2s;
+  -moz-transition: background 0.2s;
+  -ms-transition: background 0.2s;
+  -o-transition: background 0.2s;
+  cursor: pointer;
+}
+
+.profile__update-button:hover {
+  background: rgba(0, 0, 0, 0.8)
+    url('./../../../images/profile__update-button.svg') center/26px 26px
+    no-repeat;
+}

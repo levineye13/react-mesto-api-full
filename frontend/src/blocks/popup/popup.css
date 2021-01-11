@@ -1,0 +1,26 @@
+.popup {
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+  max-width: 100%;
+  min-width: 300px;
+  left: 0;
+  top: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0.3s, opacity 0.3s;
+  -webkit-transition: visibility 0.3s, opacity 0.3s;
+  -moz-transition: visibility 0.3s, opacity 0.3s;
+  -ms-transition: visibility 0.3s, opacity 0.3s;
+  -o-transition: visibility 0.3s, opacity 0.3s;
+  font-family: 'Inter', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+}

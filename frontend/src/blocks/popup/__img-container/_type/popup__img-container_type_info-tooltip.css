@@ -1,0 +1,5 @@
+.popup__img-container_type_info-tooltip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

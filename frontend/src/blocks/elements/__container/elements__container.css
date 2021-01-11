@@ -1,0 +1,6 @@
+.elements__container {
+	width: 87%;
+	display: flex;
+	align-items: center;
+	padding: 25px 0 25px 21px;
+}

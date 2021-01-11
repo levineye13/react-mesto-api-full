@@ -1,0 +1,15 @@
+.popup__input_theme_dark {
+  background-color: #000;
+  border-bottom: 2px solid #ccc;
+}
+
+.popup__input_theme_dark,
+.popup__input_theme_dark::placeholder {
+  color: #ccc;
+}
+
+.popup__input_theme_dark:-webkit-autofill {
+  -webkit-text-fill-color: #ccc;
+  background-color: #000;
+  box-shadow: 0 0 0 27px #000 inset;
+}

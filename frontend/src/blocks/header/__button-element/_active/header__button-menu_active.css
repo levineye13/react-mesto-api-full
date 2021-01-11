@@ -1,0 +1,11 @@
+.header__button-element_active {
+  background-color: transparent;
+}
+
+.header__button-element_active::before {
+  transform: rotate(45deg);
+}
+
+.header__button-element_active::after {
+  transform: rotate(-45deg);
+}

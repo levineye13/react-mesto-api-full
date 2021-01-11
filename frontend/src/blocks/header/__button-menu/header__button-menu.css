@@ -1,0 +1,17 @@
+.header__button-menu {
+  display: none;
+  padding: 0;
+  border: 0;
+  width: 24px;
+  height: 27px;
+  background-color: transparent;
+  align-items: center;
+  cursor: pointer;
+  outline: 0;
+}
+
+@media screen and (max-width: 540px) {
+  .header__button-menu {
+    display: flex;
+  }
+}

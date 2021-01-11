@@ -1,0 +1,24 @@
+.elements__list {
+	height: 100%;
+	width: 100%;
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+	display: grid;
+	grid-template-columns: repeat(3, fit-content(282px));
+	gap: 20px 18px;
+}
+
+@media screen and (max-width: 1024px) {
+	.elements__list {
+		grid-template-columns: repeat(2, fit-content(282px));
+		column-gap: 10px;
+		justify-content: space-evenly;
+	}
+}
+
+@media screen and (max-width: 640px) {
+	.elements__list {
+		grid-template-columns: fit-content(282px);
+	}
+}

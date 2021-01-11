@@ -1,0 +1,7 @@
+@media screen and (max-width: 540px) {
+  .header__list_opened {
+    max-height: 100px;
+    border-bottom: 1px solid rgba(84, 84, 84, 0.7);
+    margin-bottom: 27px;
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "mesto-backend",
+  "version": "0.0.1",
+  "description": "Бэкенд проекта mesto",
+  "main": "app.js",
+  "private": "true",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/levineye13/mesto-backend.git"
+  },
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "author": "Oleg Zharov",
+  "license": "ISC",
+  "devDependencies": {
+    "cross-env": "^7.0.2",
+    "eslint": "^7.14.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "nodemon": "^2.0.6"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.11.5"
+  }
+}

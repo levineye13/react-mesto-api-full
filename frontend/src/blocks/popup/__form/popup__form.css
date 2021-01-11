@@ -1,0 +1,12 @@
+.popup__form {
+  box-sizing: border-box;
+  max-width: 430px;
+  min-width: 280px;
+  width: 100%;
+  background-color: #fff;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  padding: 34px 36px 36px;
+  cursor: default;
+}

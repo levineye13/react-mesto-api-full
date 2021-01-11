@@ -1,0 +1,10 @@
+.page__footer {
+  flex-grow: 0;
+  margin: 66px auto 0;
+}
+
+@media screen and (max-width: 480px) {
+  .page__footer {
+    margin-top: 48px;
+  }
+}
