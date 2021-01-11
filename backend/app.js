@@ -3,8 +3,10 @@ const path = require('path');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
-const { cardsRouter } = require('./routes/cards.js');
-const { usersRouter } = require('./routes/users.js');
+const { login, createUser } = require('./controllers/usersController');
+const { cardsRouter } = require('./routes/cards');
+const { usersRouter } = require('./routes/users');
+const auth = require('./middlewares/auth');
 
 const { PORT = 3000 } = process.env;
 
@@ -25,8 +27,11 @@ app.use((req, res, next) => {
 
   next();
 });
+app.post('/signup', createUser);
+app.post('/signin', login);
+app.use(auth);
 app.use(usersRouter);
-app.use('/', cardsRouter);
+app.use(cardsRouter);
 
 //Возвращаем объект ошибки для всех остальных запросов
 app.all('*', (req, res) => {
