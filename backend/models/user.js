@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const isEmail = require('validator/lib/isEmail');
+const bcrypt = require('bcryptjs');
 
 const { Schema } = mongoose;
 
@@ -40,5 +41,28 @@ const userSchema = new Schema({
       'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
   },
 });
+
+userSchema.statics.findUserByCredentials = async function ({
+  email,
+  password,
+}) {
+  let user = null;
+  try {
+    user = await this.findOne({ email });
+  } catch (err) {
+    return err;
+  }
+
+  if (!user) {
+    throw new Error('Неправильные почта или пароль');
+  }
+
+  const compare = await bcrypt.compare(password, user.password);
+  if (!compare) {
+    throw new Error('Неправильные почта или пароль');
+  }
+
+  return user;
+};
 
 module.exports = mongoose.model('user', userSchema);
