@@ -12,10 +12,11 @@ const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const user = await User.findUserByCredentials({ email, password });
+    const user = await User.findUserByCredentials({ email, password }).select(
+      '+password'
+    );
     if (!user) {
-      res.status(401).send({ message: 'Пользователь не найден' });
-      return;
+      return res.status(401).send({ message: 'Пользователь не найден' });
     }
     const token = jwt.sign({ _id: user._id }, 'super-secret-key', {
       expiresIn: '7d',
