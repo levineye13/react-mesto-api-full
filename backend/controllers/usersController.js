@@ -1,3 +1,4 @@
+const { NODE_ENV, JWT_SECRET } = process.env;
 const User = require('./../models/user');
 const jwt = require('jsonwebtoken');
 const {
@@ -18,9 +19,13 @@ const login = async (req, res) => {
     if (!user) {
       return res.status(401).send({ message: 'Пользователь не найден' });
     }
-    const token = jwt.sign({ _id: user._id }, 'super-secret-key', {
-      expiresIn: '7d',
-    });
+    const token = jwt.sign(
+      { _id: user._id },
+      NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+      {
+        expiresIn: '7d',
+      }
+    );
     res.send({ token });
   } catch (err) {
     handleError({
