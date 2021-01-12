@@ -30,6 +30,20 @@ const login = async (req, res) => {
   }
 };
 
+const getCurrentUser = async (req, res) => {
+  const { _id } = req.user;
+  try {
+    const user = await User.findById({ _id });
+    res.status(STATUS_OK).send(user);
+  } catch (err) {
+    handleError({
+      responce: res,
+      error: err,
+      errorCode: INTERNAL_SERVER_ERROR,
+    });
+  }
+};
+
 /**
  * @param  {Object} req - объект запроса к серверу
  * @param  {Object} res - объект ответа сервера
@@ -156,6 +170,7 @@ const updateAvatar = async (req, res) => {
 
 module.exports = {
   login,
+  getCurrentUser,
   getAllUsers,
   getProfile,
   createUser,
