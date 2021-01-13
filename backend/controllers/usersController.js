@@ -7,17 +7,20 @@ const {
   NOT_FOUND_ERROR,
   INTERNAL_SERVER_ERROR,
 } = require('./../utils/constants');
-const { handleError } = require('./../utils/utils');
 
-const login = async (req, res) => {
+const {
+  NotFoundError,
+  UnauthorizedError,
+  BadRequestError,
+} = require('./../errors/errors');
+
+const login = async (req, res, next) => {
   const { email, password } = req.body;
 
   try {
-    const user = await User.findUserByCredentials({ email, password }).select(
-      '+password'
-    );
+    const user = await User.findUserByCredentials({ email, password });
     if (!user) {
-      return res.status(401).send({ message: 'Пользователь не найден' });
+      throw new UnauthorizedError('Неправильные почта или пароль');
     }
     const token = jwt.sign(
       { _id: user._id },
@@ -28,25 +31,20 @@ const login = async (req, res) => {
     );
     res.send({ token });
   } catch (err) {
-    handleError({
-      responce: res,
-      error: err,
-      errorCode: NOT_FOUND_ERROR,
-    });
+    next(err);
   }
 };
 
-const getCurrentUser = async (req, res) => {
+const getCurrentUser = async (req, res, next) => {
   const { _id } = req.user;
   try {
     const user = await User.findById({ _id });
+    if (!user) {
+      throw new NotFoundError('Пользователь не найден');
+    }
     res.status(STATUS_OK).send(user);
   } catch (err) {
-    handleError({
-      responce: res,
-      error: err,
-      errorCode: INTERNAL_SERVER_ERROR,
-    });
+    next(err);
   }
 };
 
@@ -54,20 +52,15 @@ const getCurrentUser = async (req, res) => {
  * @param  {Object} req - объект запроса к серверу
  * @param  {Object} res - объект ответа сервера
  */
-const getAllUsers = async (req, res) => {
+const getAllUsers = async (req, res, next) => {
   try {
     const users = await User.find({});
     if (users.length === 0) {
-      res.status(NOT_FOUND_ERROR).send({ message: 'Пользователи не найдены' });
-      return;
+      throw new NotFoundError('Пользователи не найдены');
     }
     res.status(STATUS_OK).send(users);
   } catch (err) {
-    handleError({
-      responce: res,
-      error: err,
-      errorCode: INTERNAL_SERVER_ERROR,
-    });
+    next(err);
   }
 };
 
@@ -75,19 +68,16 @@ const getAllUsers = async (req, res) => {
  * @param  {Object} req - объект запроса к серверу
  * @param  {Object} res - объект ответа сервера
  */
-const getProfile = async (req, res) => {
+const getProfile = async (req, res, next) => {
   const { userId } = req.params;
   try {
     const user = await User.findById(userId);
-    return !user
-      ? res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь не найден' })
-      : res.status(STATUS_OK).send(user);
+    if (!user) {
+      throw new NotFoundError('Пользователь не найден');
+    }
+    res.status(STATUS_OK).send(user);
   } catch (err) {
-    handleError({
-      responce: res,
-      error: err,
-      errorCode: INTERNAL_SERVER_ERROR,
-    });
+    next(err);
   }
 };
 
@@ -96,7 +86,7 @@ const getProfile = async (req, res) => {
  * @param  {Object} req - объект запроса к серверу
  * @param  {Object} res - объект ответа сервера
  */
-const createUser = async (req, res) => {
+const createUser = async (req, res, next) => {
   const { email, password, name, about, avatar } = req.body;
   try {
     const passwordHash = await bcrypt.hash(password, 10);
@@ -109,14 +99,11 @@ const createUser = async (req, res) => {
     });
     res.status(STATUS_OK).send(newUser);
   } catch (err) {
-    handleError({
-      responce: res,
-      error: err,
-      errorCode:
-        err.name === 'ValidationError'
-          ? BAD_REQUEST_ERROR
-          : INTERNAL_SERVER_ERROR,
-    });
+    next(
+      err.name === 'ValidationError'
+        ? new BadRequestError('Переданы некорректные данные')
+        : internalServerError
+    );
   }
 };
 
@@ -125,7 +112,7 @@ const createUser = async (req, res) => {
  * @param  {Object} req - объект запроса к серверу
  * @param  {Object} res - объект ответа сервера
  */
-const updateProfile = async (req, res) => {
+const updateProfile = async (req, res, next) => {
   const { _id } = req.user;
   const { name, about } = req.body;
   try {
@@ -136,14 +123,11 @@ const updateProfile = async (req, res) => {
     );
     res.status(STATUS_OK).send(updatedProfile);
   } catch (err) {
-    handleError({
-      responce: res,
-      error: err,
-      errorCode:
-        err.name === 'ValidationError'
-          ? BAD_REQUEST_ERROR
-          : INTERNAL_SERVER_ERROR,
-    });
+    next(
+      err.name === 'ValidationError'
+        ? new BadRequestError('Переданы некорректные данные')
+        : internalServerError
+    );
   }
 };
 
@@ -152,7 +136,7 @@ const updateProfile = async (req, res) => {
  * @param  {Object} req - объект запроса к серверу
  * @param  {Object} res - объект ответа сервера
  */
-const updateAvatar = async (req, res) => {
+const updateAvatar = async (req, res, next) => {
   const { _id } = req.user;
   const { avatar } = req.body;
   try {
@@ -163,14 +147,11 @@ const updateAvatar = async (req, res) => {
     );
     res.status(STATUS_OK).send(updatedAvatar);
   } catch (err) {
-    handleError({
-      responce: res,
-      error: err,
-      errorCode:
-        err.name === 'ValidationError'
-          ? BAD_REQUEST_ERROR
-          : INTERNAL_SERVER_ERROR,
-    });
+    next(
+      err.name === 'ValidationError'
+        ? new BadRequestError('Переданы некорректные данные')
+        : internalServerError
+    );
   }
 };
 
