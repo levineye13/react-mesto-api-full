@@ -2,13 +2,6 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 const User = require('./../models/user');
 const jwt = require('jsonwebtoken');
 const {
-  STATUS_OK,
-  BAD_REQUEST_ERROR,
-  NOT_FOUND_ERROR,
-  INTERNAL_SERVER_ERROR,
-} = require('./../utils/constants');
-
-const {
   NotFoundError,
   UnauthorizedError,
   BadRequestError,
@@ -42,7 +35,7 @@ const getCurrentUser = async (req, res, next) => {
     if (!user) {
       throw new NotFoundError('Пользователь не найден');
     }
-    res.status(STATUS_OK).send(user);
+    res.status(200).send(user);
   } catch (err) {
     next(err);
   }
@@ -58,7 +51,7 @@ const getAllUsers = async (req, res, next) => {
     if (users.length === 0) {
       throw new NotFoundError('Пользователи не найдены');
     }
-    res.status(STATUS_OK).send(users);
+    res.status(200).send(users);
   } catch (err) {
     next(err);
   }
@@ -75,7 +68,7 @@ const getProfile = async (req, res, next) => {
     if (!user) {
       throw new NotFoundError('Пользователь не найден');
     }
-    res.status(STATUS_OK).send(user);
+    res.status(200).send(user);
   } catch (err) {
     next(err);
   }
@@ -97,12 +90,12 @@ const createUser = async (req, res, next) => {
       about,
       avatar,
     });
-    res.status(STATUS_OK).send(newUser);
+    res.status(200).send(newUser);
   } catch (err) {
     next(
       err.name === 'ValidationError'
         ? new BadRequestError('Переданы некорректные данные')
-        : internalServerError
+        : err
     );
   }
 };
@@ -121,12 +114,12 @@ const updateProfile = async (req, res, next) => {
       { name, about },
       { new: true, runValidators: true, upsert: true }
     );
-    res.status(STATUS_OK).send(updatedProfile);
+    res.status(200).send(updatedProfile);
   } catch (err) {
     next(
       err.name === 'ValidationError'
         ? new BadRequestError('Переданы некорректные данные')
-        : internalServerError
+        : err
     );
   }
 };
@@ -145,12 +138,12 @@ const updateAvatar = async (req, res, next) => {
       { avatar },
       { new: true, runValidators: true, upsert: true }
     );
-    res.status(STATUS_OK).send(updatedAvatar);
+    res.status(200).send(updatedAvatar);
   } catch (err) {
     next(
       err.name === 'ValidationError'
         ? new BadRequestError('Переданы некорректные данные')
-        : internalServerError
+        : err
     );
   }
 };
