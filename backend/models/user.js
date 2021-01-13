@@ -49,7 +49,7 @@ userSchema.statics.findUserByCredentials = async function ({
 }) {
   let user = null;
   try {
-    user = await this.findOne({ email });
+    user = await this.findOne({ email }).select('+password');
   } catch (err) {
     return err;
   }
