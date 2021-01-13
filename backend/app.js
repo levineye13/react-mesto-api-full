@@ -7,7 +7,7 @@ const { login, createUser } = require('./controllers/usersController');
 const { cardsRouter } = require('./routes/cards');
 const { usersRouter } = require('./routes/users');
 const auth = require('./middlewares/auth');
-const { InternalServerError } = require('./errors/errors');
+const handleError = require('./middlewares/handleError');
 
 const { PORT } = process.env;
 
@@ -32,17 +32,8 @@ app.all('*', (req, res) => {
   res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
 });
 
-app.use((err, req, res, next) => {
-  const internalServerError = new InternalServerError();
-  const { statusCode = internalServerError.statusCode, message } = err;
-
-  res.status(statusCode).send({
-    message:
-      statusCode === internalServerError.statusCode
-        ? internalServerError.message
-        : message,
-  });
-});
+//Мидлвар обработки ошибок
+app.use(handleError);
 
 app.listen(PORT, () => {
   console.log(`Сервер запущен на порту ${PORT}`);
