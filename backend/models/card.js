@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
-const { Schema } = mongoose;
+const { regexpLink } = require('../utils/constants');
 
-const regexp = /^https?:\/\/(www\.)?[\wа-яА-Я\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;=]+#?$/;
+const { Schema } = mongoose;
 
 const cardSchema = new Schema({
   name: {
@@ -15,7 +15,7 @@ const cardSchema = new Schema({
     type: String,
     required: true,
     validate: {
-      validator: (v) => regexp.test(v),
+      validator: (v) => regexpLink.test(v),
     },
   },
   owner: {

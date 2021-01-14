@@ -2,9 +2,9 @@ const mongoose = require('mongoose');
 const isEmail = require('validator/lib/isEmail');
 const bcrypt = require('bcryptjs');
 
-const { Schema } = mongoose;
+const { regexpLink } = require('../utils/constants');
 
-const regexp = /^https?:\/\/(www\.)?[\wа-яА-Я\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;=]+#?$/;
+const { Schema } = mongoose;
 
 const userSchema = new Schema({
   email: {
@@ -36,7 +36,7 @@ const userSchema = new Schema({
   avatar: {
     type: String,
     validate: {
-      validator: (v) => regexp.test(v),
+      validator: (v) => regexpLink.test(v),
     },
     default:
       'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
