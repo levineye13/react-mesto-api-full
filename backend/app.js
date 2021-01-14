@@ -8,6 +8,7 @@ const { login, createUser } = require('./controllers/usersController');
 const { cardsRouter } = require('./routes/cards');
 const { usersRouter } = require('./routes/users');
 const auth = require('./middlewares/auth');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 const handleError = require('./middlewares/handleError');
 const { regexpLink } = require('./utils/constants');
 
@@ -22,6 +23,9 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 });
 
 app.use(bodyParser.json());
+
+//Логгер запросов
+app.use(requestLogger);
 
 //Регистрация
 app.post(
@@ -77,6 +81,9 @@ app.use(cardsRouter);
 app.all('*', (req, res) => {
   res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
 });
+
+//Логгер ошибок
+app.use(errorLogger);
 
 //Обработчик ошибок celebrate
 app.use(errors());
