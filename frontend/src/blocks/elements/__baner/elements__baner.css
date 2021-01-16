@@ -1,0 +1,11 @@
+.elements__baner {
+  text-align: center;
+  color: #fff;
+  font-size: 24px;
+}
+
+@media screen and (max-width: 720px) {
+  .elements__baner {
+    font-size: 18px;
+  }
+}
