@@ -1,3 +1,5 @@
+import { JWT } from './constants';
+
 class Api {
   constructor({ baseUrl, headers }) {
     this._baseUrl = baseUrl;
@@ -7,151 +9,192 @@ class Api {
   /**
    * Метод обработки ответа сервера
    *
-   * @param  {Object} responce - объект ответа сервера
+   * @param  {Object} res - объект ответа сервера
    */
-  async _checkResponceStatus(responce) {
-    if (responce.ok) {
-      const json = await responce.json();
-      return json;
+  _checkResponceStatus = async (res) => {
+    if (res.ok) {
+      return res.json();
     }
-    throw new Error(`Ошибка: ${responce.status} - ${responce.statusText}`);
-  }
+    throw new Error(`Ошибка: ${res.status} - ${res.statusText}`);
+  };
 
   /**
    * Метод получения информации о пользователе с сервера
    *
    * @return {Object}
    */
-  async getUserInfo() {
+  getUserInfo = async () => {
+    const jwt = localStorage.getItem(JWT);
     try {
-      const responce = await fetch(`${this._baseUrl}/users/me`, {
+      const res = await fetch(`${this._baseUrl}/users/me`, {
         method: 'GET',
-        headers: this._headers,
+        headers: {
+          ...this._headers,
+          authorization: `Bearer ${jwt}`,
+        },
       });
-      //Дожидаемся ответа. Если функция вернет ошибку, выводим ее.
-      const data = await this._checkResponceStatus(responce);
-      return data;
-    } catch (error) {
-      console.error(error);
+
+      return this._checkResponceStatus(res);
+    } catch (err) {
+      console.error(err);
     }
-  }
+  };
 
   /**
    * Метод получения карточек с сервера
    *
    * @return {Object}
    */
-  async getInitialCards() {
+  getInitialCards = async () => {
+    const jwt = localStorage.getItem(JWT);
     try {
-      const responce = await fetch(`${this._baseUrl}/cards`, {
+      const res = await fetch(`${this._baseUrl}/cards`, {
         method: 'GET',
-        headers: this._headers,
+        headers: {
+          ...this._headers,
+          authorization: `Bearer ${jwt}`,
+        },
       });
-      const data = await this._checkResponceStatus(responce);
-      return data;
-    } catch (error) {
-      console.error(error);
+
+      return this._checkResponceStatus(res);
+    } catch (err) {
+      console.error(err);
     }
-  }
+  };
 
-  async getValidInitialData() {
-    const initialData = await Promise.all([
-      this.getUserInfo(),
-      this.getInitialCards(),
-    ]);
-    return initialData;
-  }
+  getAllInitialData = async () => {
+    return Promise.allSettled([this.getUserInfo(), this.getInitialCards()]);
+  };
 
-  async getAllInitialData() {
-    const initialData = await Promise.allSettled([
-      this.getUserInfo(),
-      this.getInitialCards(),
-    ]);
-    return initialData;
-  }
-
-  async setUserInfo({ name, about }) {
+  setUserInfo = async ({ name, about }) => {
+    const jwt = localStorage.getItem(JWT);
     try {
-      const responce = await fetch(`${this._baseUrl}/users/me`, {
+      const res = await fetch(`${this._baseUrl}/users/me`, {
         method: 'PATCH',
-        headers: this._headers,
+        headers: {
+          ...this._headers,
+          authorization: `Bearer ${jwt}`,
+        },
         body: JSON.stringify({
           name,
           about,
         }),
       });
-      const data = await this._checkResponceStatus(responce);
-      return data;
-    } catch (error) {
-      console.error(error);
+      return this._checkResponceStatus(res);
+    } catch (err) {
+      console.error(err);
     }
-  }
+  };
 
-  async addCard({ name, link }) {
+  addCard = async ({ name, link }) => {
+    const jwt = localStorage.getItem(JWT);
     try {
-      const responce = await fetch(`${this._baseUrl}/cards`, {
+      const res = await fetch(`${this._baseUrl}/cards`, {
         method: 'POST',
-        headers: this._headers,
+        headers: {
+          ...this._headers,
+          authorization: `Bearer ${jwt}`,
+        },
         body: JSON.stringify({
           name,
           link,
         }),
       });
-      const data = await this._checkResponceStatus(responce);
-      return data;
-    } catch (error) {
-      console.error(error);
+      return this._checkResponceStatus(res);
+    } catch (err) {
+      console.error(err);
     }
-  }
+  };
 
-  async deleteCard(cardId) {
+  deleteCard = async (cardId) => {
+    const jwt = localStorage.getItem(JWT);
     try {
-      const responce = await fetch(`${this._baseUrl}/cards/${cardId}`, {
+      const res = await fetch(`${this._baseUrl}/cards/${cardId}`, {
         method: 'DELETE',
-        headers: this._headers,
+        headers: {
+          ...this._headers,
+          authorization: `Bearer ${jwt}`,
+        },
       });
-      const data = await this._checkResponceStatus(responce);
-      return data;
-    } catch (error) {
-      console.error(error);
+      return this._checkResponceStatus(res);
+    } catch (err) {
+      console.error(err);
     }
-  }
+  };
 
-  async changeLikeCardStatus(cardId, methodHTTP) {
+  changeLikeCardStatus = async (cardId, methodHTTP) => {
+    const jwt = localStorage.getItem(JWT);
     try {
-      const responce = await fetch(`${this._baseUrl}/cards/likes/${cardId}`, {
+      const res = await fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
         method: methodHTTP,
-        headers: this._headers,
+        headers: {
+          ...this._headers,
+          authorization: `Bearer ${jwt}`,
+        },
       });
-      const data = await this._checkResponceStatus(responce);
-      return data;
-    } catch (error) {
-      console.error(error);
+      return this._checkResponceStatus(res);
+    } catch (err) {
+      console.error(err);
     }
-  }
+  };
 
-  async updateUserAvatar(avatar) {
+  updateUserAvatar = async (avatar) => {
+    const jwt = localStorage.getItem(JWT);
     try {
-      const responce = await fetch(`${this._baseUrl}/users/me/avatar`, {
+      const res = await fetch(`${this._baseUrl}/users/me/avatar`, {
         method: 'PATCH',
-        headers: this._headers,
+        headers: {
+          ...this._headers,
+          authorization: `Bearer ${jwt}`,
+        },
         body: JSON.stringify({
           avatar,
         }),
       });
-      const data = await this._checkResponceStatus(responce);
-      return data;
-    } catch (error) {
-      console.error(error);
+      return this._checkResponceStatus(res);
+    } catch (err) {
+      console.error(err);
     }
-  }
+  };
+
+  register = async ({ email, password }) => {
+    try {
+      const res = await fetch(`${this._baseUrl}/signup`, {
+        method: 'POST',
+        headers: this._headers,
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
+      return this._checkResponceStatus(res);
+    } catch (err) {
+      console.error(`${err.name} - ${err.message}`);
+    }
+  };
+
+  authorize = async ({ password, email }) => {
+    try {
+      const res = await fetch(`${this._baseUrl}/signin`, {
+        method: 'POST',
+        headers: this._headers,
+        body: JSON.stringify({
+          password,
+          email,
+        }),
+      });
+
+      return this._checkResponceStatus(res);
+    } catch (err) {
+      console.error(`${err.name} - ${err.message}`);
+    }
+  };
 }
 
 //Экземпляр Api для осуществления запросов к серверу
 export const api = new Api({
-  baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-16',
+  baseUrl: 'http://localhost:3000',
   headers: {
-    authorization: 'f1f27dcb-4c71-4cd5-a34d-2e8f5fd4811e',
     'Content-Type': 'application/json',
   },
 });
