@@ -3,7 +3,7 @@ import { Link, useHistory, useLocation } from 'react-router-dom';
 import { JWT, signIn, signUp } from '../utils/constants.js';
 import headerLogo from '../images/header__logo.svg';
 
-const Header = ({ loggedIn, setLoggedIn, data }) => {
+const Header = ({ loggedIn, setLoggedIn, email }) => {
   const { pathname: path } = useLocation();
   const history = useHistory();
   const [text, setText] = useState('');
@@ -51,7 +51,7 @@ const Header = ({ loggedIn, setLoggedIn, data }) => {
       >
         <li className="header__item">
           <p className="header__email">
-            {loggedIn ? (data ? data.email : '') : ''}
+            {loggedIn ? (email ? email : '') : ''}
           </p>
         </li>
         <li className="header__item">

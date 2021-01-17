@@ -1,7 +1,7 @@
 import React from 'react';
 
-const Loader = React.memo(function () {
+const Loader = () => {
   return <div className="animation animation_type_loader"></div>;
-});
+};
 
 export default Loader;

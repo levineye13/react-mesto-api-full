@@ -17,7 +17,7 @@ const Login = ({ onAuthorization, onCheckToken }) => {
       password: values.password,
       email: values.email,
     });
-    //вызываем функцию проверки токена, чтобы получить email
+    //после авторизации проверяем токен и устанавливаем данные
     await onCheckToken();
   };
 

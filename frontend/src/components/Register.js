@@ -16,8 +16,8 @@ const Register = ({ onRegistration }) => {
     evt.preventDefault();
 
     onRegistration({
-      password: values.password,
       email: values.email,
+      password: values.password,
     });
   };
 
