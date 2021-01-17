@@ -13,14 +13,13 @@ import AddPlacePopup from './AddPlacePopup';
 import ConfirmDeleteCardPopup from './ConfirmDeleteCardPopup';
 import InfoTooltip from './InfoTooltip';
 import { api } from '../utils/api';
-import { auth } from '../utils/auth';
 import { CurrentUserContext } from './../contexts/CurrentUserContext';
 import avatarImg from './../images/profile__avatar.jpg';
 import { JWT, signIn, signUp } from '../utils/constants';
+import { splitDataArray } from '../utils/utils';
 
 const App = () => {
   const [loggedIn, setLoggedIn] = useState(false);
-  const [authorizedUserData, setAuthorizedUserData] = useState(null);
   const [isEditProfilePopupOpen, setEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = useState(false);
@@ -35,6 +34,7 @@ const App = () => {
 
   //Дефолтная инициализация в случае невыполнения запроса к api.
   const [currentUser, setCurrentUser] = useState({
+    email: 'email',
     avatar: avatarImg,
     name: 'Name',
     about: 'Information about you',
@@ -321,7 +321,7 @@ const App = () => {
           <Header
             loggedIn={loggedIn}
             setLoggedIn={setLoggedIn}
-            data={authorizedUserData}
+            email={currentUser.email}
           />
           <Switch>
             <Route path={signIn}>
