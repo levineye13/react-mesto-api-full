@@ -253,7 +253,7 @@ const App = () => {
       if (dataCards) {
         setCards(dataCards);
       }
-      if (data) {
+      if (dataUser || dataCards) {
         setLoggedIn(true);
         history.push('/');
       } else {

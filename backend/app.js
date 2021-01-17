@@ -11,7 +11,6 @@ const { usersRouter } = require('./routes/users');
 const auth = require('./middlewares/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const handleError = require('./middlewares/handleError');
-const { regexpLink } = require('./utils/constants');
 
 const { PORT } = process.env;
 
