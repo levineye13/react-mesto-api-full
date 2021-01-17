@@ -11,16 +11,17 @@ const { regexpLink } = require('../utils/constants.js');
 
 usersRouter.get('/users', getAllUsers);
 
+usersRouter.get('/users/me', getCurrentUser);
+
 usersRouter.get(
   '/users/:userId',
   celebrate({
     params: Joi.object().keys({
-      userId: Joi.string().required().alphanum().length(24),
+      userId: Joi.string().required().alphanum(),
     }),
   }),
   getProfile
 );
-usersRouter.get('/users/me', getCurrentUser);
 
 usersRouter.patch(
   '/users/me',
@@ -38,8 +39,6 @@ usersRouter.patch(
   celebrate({
     body: Joi.object().keys({
       avatar: Joi.string()
-        .min(2)
-        .max(30)
         .pattern(regexpLink)
         .default(
           'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png'
