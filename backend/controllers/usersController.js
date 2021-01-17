@@ -1,6 +1,7 @@
 const { NODE_ENV, JWT_SECRET } = process.env;
 const User = require('./../models/user');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 const {
   NotFoundError,
   UnauthorizedError,
@@ -12,6 +13,7 @@ const login = async (req, res, next) => {
 
   try {
     const user = await User.findUserByCredentials({ email, password });
+
     if (!user) {
       throw new UnauthorizedError('Неправильные почта или пароль');
     }
@@ -30,11 +32,16 @@ const login = async (req, res, next) => {
 
 const getCurrentUser = async (req, res, next) => {
   const { _id } = req.user;
+
   try {
+    if (!_id) {
+      throw new NotFoundError('Пользователь не найден');
+    }
     const user = await User.findById({ _id });
     if (!user) {
       throw new NotFoundError('Пользователь не найден');
     }
+
     res.status(200).send(user);
   } catch (err) {
     next(err);
@@ -80,9 +87,16 @@ const getProfile = async (req, res, next) => {
  * @param  {Object} res - объект ответа сервера
  */
 const createUser = async (req, res, next) => {
-  const { email, password, name, about, avatar } = req.body;
+  const {
+    email,
+    password,
+    name = 'Жак-Ив Кусто',
+    about = 'Исследователь',
+    avatar = 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
+  } = req.body;
   try {
-    const passwordHash = await bcrypt.hash(password, 10);
+    const salt = await bcrypt.genSalt(10);
+    const passwordHash = await bcrypt.hash(password, salt);
     const newUser = await User.create({
       email,
       password: passwordHash,
