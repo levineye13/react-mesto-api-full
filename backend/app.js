@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { celebrate, Joi, errors } = require('celebrate');
+const cors = require('cors');
 
 const { login, createUser } = require('./controllers/usersController');
 const { cardsRouter } = require('./routes/cards');
@@ -16,7 +17,7 @@ const { PORT } = process.env;
 
 const app = express();
 
-mongoose.connect('mongodb://localhost:27017/mestodb', {
+mongoose.connect('mongodb://localhost:27017/mestodb-15', {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
@@ -27,6 +28,9 @@ app.use(bodyParser.json());
 //Логгер запросов
 app.use(requestLogger);
 
+//Политика CORS
+app.use(cors());
+
 //Регистрация
 app.post(
   '/signup',
@@ -34,15 +38,6 @@ app.post(
     body: Joi.object().keys({
       email: Joi.string().required().email(),
       password: Joi.string().required().min(8),
-      name: Joi.string().min(2).max(30).default('Жак-Ив Кусто'),
-      about: Joi.string().min(2).max(30).default('Исследователь'),
-      avatar: Joi.string()
-        .min(2)
-        .max(30)
-        .pattern(regexpLink)
-        .default(
-          'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png'
-        ),
     }),
   }),
   createUser
@@ -62,17 +57,6 @@ app.post(
 
 //Проверка авторизации
 app.use(auth);
-
-// app.use(
-//   celebrate({
-//     headers: Joi.object().keys({
-//       Authorization: Joi.string()
-//         .required()
-//         .pattern(/^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_=]*$/),
-//     }),
-//   }),
-//   auth
-// );
 
 app.use(usersRouter);
 app.use(cardsRouter);
