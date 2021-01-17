@@ -147,9 +147,7 @@ const App = () => {
    * Обработчик лайка/дислайка карточки
    * @param  {Object} card - карточка
    */
-  const handleCardLike = async (card) => {
-    const isLiked = card.likes.some((like) => currentUser._id === like._id);
-
+  const handleCardLike = async (card, isLiked) => {
     try {
       const newCard = await api.changeLikeCardStatus(
         card._id,
@@ -212,11 +210,10 @@ const App = () => {
    */
   const handleAuthorization = async ({ password, email }) => {
     try {
-      const data = await auth.authorize({ password, email });
-      if (!data.hasOwnProperty('error')) {
-        setLoggedIn(true);
-        localStorage.setItem(JWT, data.token);
-        history.push('/');
+      const { token } = await api.authorize({ password, email });
+
+      if (token) {
+        localStorage.setItem(JWT, token);
       }
     } catch (err) {
       console.error(err);
@@ -228,10 +225,11 @@ const App = () => {
    * @param  {String} password
    * @param  {String} email
    */
-  const handleRegistration = async ({ password, email }) => {
+  const handleRegistration = async ({ email, password }) => {
     try {
-      const data = await auth.register({ password, email });
-      if (data.hasOwnProperty('error')) {
+      const data = await api.register({ email, password });
+
+      if (!data) {
         handleInfoTooltipOpen(false);
       } else {
         history.push(signIn);
@@ -243,16 +241,20 @@ const App = () => {
   };
 
   /**
-   * Обработчик проверки токена
+   * Обработчик проверки токена и отрисовки данных
    */
   const handleCheckToken = async () => {
     try {
-      const { data } = await auth.checkToken({
-        token: localStorage.getItem(JWT),
-      });
+      const data = await api.getAllInitialData();
+      const [dataUser, dataCards] = splitDataArray(data);
+      if (dataUser) {
+        setCurrentUser(dataUser);
+      }
+      if (dataCards) {
+        setCards(dataCards);
+      }
       if (data) {
         setLoggedIn(true);
-        setAuthorizedUserData(data);
         history.push('/');
       } else {
         localStorage.removeItem(JWT);
@@ -267,11 +269,15 @@ const App = () => {
    * если токен прошел проверку
    */
   useEffect(() => {
-    const jwt = localStorage.getItem(JWT);
+    const fetchData = async () => {
+      const jwt = localStorage.getItem(JWT);
 
-    if (jwt) {
-      handleCheckToken();
-    }
+      if (jwt) {
+        await handleCheckToken();
+      }
+    };
+
+    fetchData();
   }, []);
 
   /**
@@ -282,7 +288,7 @@ const App = () => {
     const fetchData = async () => {
       try {
         const dataArray = await api.getAllInitialData();
-        const [dataUser, dataCards] = dataArray.map((item) => item.value);
+        const [dataUser, dataCards] = splitDataArray(dataArray);
 
         if (dataUser) {
           setCurrentUser(dataUser);
