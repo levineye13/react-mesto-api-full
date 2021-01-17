@@ -9,7 +9,7 @@ const getCards = async (req, res, next) => {
   try {
     const cards = await Card.find({});
     if (cards.length === 0) {
-      throw new NotFoundError('Карточки не найдены');
+      throw new NotFoundError('Пока что карточек нет');
     }
     res.status(200).send(cards);
   } catch (err) {
@@ -69,7 +69,7 @@ const likeCard = async (req, res, next) => {
   try {
     const updatedCard = await Card.findByIdAndUpdate(
       cardId,
-      { $addToSet: { likes: _id } },
+      { $addToSet: { likes: { _id } } },
       { new: true }
     );
     if (!updatedCard) {
@@ -93,7 +93,7 @@ const dislikeCard = async (req, res, next) => {
   try {
     const updatedCard = await Card.findByIdAndUpdate(
       cardId,
-      { $pull: { likes: _id } },
+      { $pull: { likes: { _id } } },
       { new: true }
     );
     if (!updatedCard) {
