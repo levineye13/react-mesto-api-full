@@ -22,13 +22,22 @@ mongoose.connect('mongodb://localhost:27017/mestodb-15', {
   useFindAndModify: false,
 });
 
+//Парсер кук
+app.use(cookieParser());
+
+//Парсер тела запросов
 app.use(bodyParser.json());
 
 //Логгер запросов
 app.use(requestLogger);
 
 //Политика CORS
-app.use(cors());
+app.use(
+  cors({
+    origin: 'ilovemesto.students.nomoreparties.xyz',
+    methods: 'GET,POST,PUT,PATCH,DELETE,OPTIONS',
+  })
+);
 
 //Регистрация
 app.post(
