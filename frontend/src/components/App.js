@@ -210,11 +210,7 @@ const App = () => {
    */
   const handleAuthorization = async ({ password, email }) => {
     try {
-      const { token } = await api.authorize({ password, email });
-
-      if (token) {
-        localStorage.setItem(JWT, token);
-      }
+      await api.authorize({ password, email });
     } catch (err) {
       console.error(err);
     }
@@ -256,8 +252,6 @@ const App = () => {
       if (dataUser || dataCards) {
         setLoggedIn(true);
         history.push('/');
-      } else {
-        localStorage.removeItem(JWT);
       }
     } catch (err) {
       console.error(err);
@@ -270,11 +264,7 @@ const App = () => {
    */
   useEffect(() => {
     const fetchData = async () => {
-      const jwt = localStorage.getItem(JWT);
-
-      if (jwt) {
-        await handleCheckToken();
-      }
+      await handleCheckToken();
     };
 
     fetchData();

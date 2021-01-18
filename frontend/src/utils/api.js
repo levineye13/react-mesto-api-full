@@ -1,5 +1,3 @@
-import { JWT } from './constants';
-
 class Api {
   constructor({ baseUrl, headers }) {
     this._baseUrl = baseUrl;
@@ -24,14 +22,10 @@ class Api {
    * @return {Object}
    */
   getUserInfo = async () => {
-    const jwt = localStorage.getItem(JWT);
     try {
       const res = await fetch(`${this._baseUrl}/users/me`, {
         method: 'GET',
-        headers: {
-          ...this._headers,
-          authorization: `Bearer ${jwt}`,
-        },
+        headers: this._headers,
       });
 
       return this._checkResponceStatus(res);
@@ -46,14 +40,10 @@ class Api {
    * @return {Object}
    */
   getInitialCards = async () => {
-    const jwt = localStorage.getItem(JWT);
     try {
       const res = await fetch(`${this._baseUrl}/cards`, {
         method: 'GET',
-        headers: {
-          ...this._headers,
-          authorization: `Bearer ${jwt}`,
-        },
+        headers: this._headers,
       });
 
       return this._checkResponceStatus(res);
@@ -67,14 +57,11 @@ class Api {
   };
 
   setUserInfo = async ({ name, about }) => {
-    const jwt = localStorage.getItem(JWT);
     try {
       const res = await fetch(`${this._baseUrl}/users/me`, {
         method: 'PATCH',
-        headers: {
-          ...this._headers,
-          authorization: `Bearer ${jwt}`,
-        },
+        headers: this._headers,
+
         body: JSON.stringify({
           name,
           about,
@@ -87,14 +74,11 @@ class Api {
   };
 
   addCard = async ({ name, link }) => {
-    const jwt = localStorage.getItem(JWT);
     try {
       const res = await fetch(`${this._baseUrl}/cards`, {
         method: 'POST',
-        headers: {
-          ...this._headers,
-          authorization: `Bearer ${jwt}`,
-        },
+        headers: this._headers,
+
         body: JSON.stringify({
           name,
           link,
@@ -107,14 +91,10 @@ class Api {
   };
 
   deleteCard = async (cardId) => {
-    const jwt = localStorage.getItem(JWT);
     try {
       const res = await fetch(`${this._baseUrl}/cards/${cardId}`, {
         method: 'DELETE',
-        headers: {
-          ...this._headers,
-          authorization: `Bearer ${jwt}`,
-        },
+        headers: this._headers,
       });
       return this._checkResponceStatus(res);
     } catch (err) {
@@ -123,14 +103,10 @@ class Api {
   };
 
   changeLikeCardStatus = async (cardId, methodHTTP) => {
-    const jwt = localStorage.getItem(JWT);
     try {
       const res = await fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
         method: methodHTTP,
-        headers: {
-          ...this._headers,
-          authorization: `Bearer ${jwt}`,
-        },
+        headers: this._headers,
       });
       return this._checkResponceStatus(res);
     } catch (err) {
@@ -139,14 +115,11 @@ class Api {
   };
 
   updateUserAvatar = async (avatar) => {
-    const jwt = localStorage.getItem(JWT);
     try {
       const res = await fetch(`${this._baseUrl}/users/me/avatar`, {
         method: 'PATCH',
-        headers: {
-          ...this._headers,
-          authorization: `Bearer ${jwt}`,
-        },
+        headers: this._headers,
+
         body: JSON.stringify({
           avatar,
         }),
@@ -173,18 +146,16 @@ class Api {
     }
   };
 
-  authorize = async ({ password, email }) => {
+  authorize = async ({ email, password }) => {
     try {
-      const res = await fetch(`${this._baseUrl}/signin`, {
+      await fetch(`${this._baseUrl}/signin`, {
         method: 'POST',
         headers: this._headers,
         body: JSON.stringify({
-          password,
           email,
+          password,
         }),
       });
-
-      return this._checkResponceStatus(res);
     } catch (err) {
       console.error(`${err.name} - ${err.message}`);
     }
@@ -193,7 +164,8 @@ class Api {
 
 //Экземпляр Api для осуществления запросов к серверу
 export const api = new Api({
-  baseUrl: 'http://localhost:3000',
+  //baseUrl: 'http://localhost:3000',
+  baseUrl: 'http://api.ilovemesto.students.nomoreparties.xyz',
   headers: {
     'Content-Type': 'application/json',
   },

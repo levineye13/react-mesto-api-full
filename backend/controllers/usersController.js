@@ -24,7 +24,14 @@ const login = async (req, res, next) => {
         expiresIn: '7d',
       }
     );
-    res.send({ token });
+
+    res
+      .cookie('jwt', `Bearer ${token}`, {
+        maxAge: 3600000 * 24 * 7,
+        httpOnly: true,
+        sameSite: true,
+      })
+      .end();
   } catch (err) {
     next(err);
   }
@@ -104,7 +111,7 @@ const createUser = async (req, res, next) => {
       about,
       avatar,
     });
-    res.status(200).send(newUser);
+    res.status(201).send(newUser);
   } catch (err) {
     next(
       err.name === 'ValidationError'
