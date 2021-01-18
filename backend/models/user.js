@@ -3,6 +3,7 @@ const isEmail = require('validator/lib/isEmail');
 const bcrypt = require('bcryptjs');
 
 const { regexpLink } = require('../utils/constants');
+const { BadRequestError } = require('../errors/errors');
 
 const { Schema } = mongoose;
 
@@ -55,12 +56,12 @@ userSchema.statics.findUserByCredentials = async function ({
   }
 
   if (!user) {
-    throw new Error('Неправильные почта или пароль');
+    throw new BadRequestError('Неправильные почта или пароль');
   }
 
   const compare = await bcrypt.compare(password, user.password);
   if (!compare) {
-    throw new Error('Неправильные почта или пароль');
+    throw new BadRequestError('Неправильные почта или пароль');
   }
 
   return user;

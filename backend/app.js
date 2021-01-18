@@ -12,6 +12,7 @@ const { usersRouter } = require('./routes/users');
 const auth = require('./middlewares/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const handleError = require('./middlewares/handleError');
+const { BadRequestError } = require('./errors/errors');
 
 const { PORT } = process.env;
 
@@ -72,7 +73,7 @@ app.use(cardsRouter);
 
 //Возвращаем объект ошибки для всех остальных запросов
 app.all('*', (req, res) => {
-  res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
+  throw new BadRequestError('Запрашиваемый ресурс не найден');
 });
 
 //Логгер ошибок
