@@ -6,13 +6,14 @@ const cookieParser = require('cookie-parser');
 const { celebrate, Joi, errors } = require('celebrate');
 const cors = require('cors');
 
+const { allowedCors } = require('./utils/constants');
 const { login, createUser } = require('./controllers/usersController');
 const { cardsRouter } = require('./routes/cards');
 const { usersRouter } = require('./routes/users');
 const auth = require('./middlewares/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const handleError = require('./middlewares/handleError');
-const { BadRequestError } = require('./errors/errors');
+const { BadRequestError, NotFoundError } = require('./errors/errors');
 
 const { PORT } = process.env;
 
@@ -36,7 +37,13 @@ app.use(requestLogger);
 //Политика CORS
 app.use(
   cors({
-    origin: 'ilovemesto.students.nomoreparties.xyz',
+    origin: (origin, callback) => {
+      if (allowedCors.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new NotFoundError('Не разрешено CORS'));
+      }
+    },
     methods: 'GET,POST,PUT,PATCH,DELETE,OPTIONS',
   })
 );
