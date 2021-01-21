@@ -13,7 +13,7 @@ const { usersRouter } = require('./routes/users');
 const auth = require('./middlewares/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const handleError = require('./middlewares/handleError');
-const { BadRequestError, NotFoundError } = require('./errors/errors');
+const { BadRequestError, UnauthorizedError } = require('./errors/errors');
 
 const { PORT } = process.env;
 
@@ -38,13 +38,13 @@ app.use(requestLogger);
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (allowedCors.includes(origin)) {
-        callback(null, true);
+      if (!origin || !allowedCors.includes(origin)) {
+        callback(new UnauthorizedError('Не разрешено CORS'));
       } else {
-        callback(new NotFoundError('Не разрешено CORS'));
+        callback(null, true);
       }
     },
-    methods: 'GET,POST,PUT,PATCH,DELETE,OPTIONS',
+    methods: 'GET,PUT,PATCH,POST,DELETE,OPTIONS',
   })
 );
 
