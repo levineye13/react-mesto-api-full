@@ -1,6 +1,7 @@
 const usersRouter = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 const {
+  logout,
   getCurrentUser,
   getAllUsers,
   getProfile,
@@ -22,6 +23,8 @@ usersRouter.get(
   }),
   getProfile
 );
+
+usersRouter.delete('/signout', logout);
 
 usersRouter.patch(
   '/users/me',

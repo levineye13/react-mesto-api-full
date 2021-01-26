@@ -37,6 +37,14 @@ const login = async (req, res, next) => {
   }
 };
 
+const logout = async (req, res, next) => {
+  try {
+    res.clearCookie('jwt');
+  } catch (err) {
+    next(err);
+  }
+};
+
 const getCurrentUser = async (req, res, next) => {
   const { _id } = req.user;
 
@@ -48,8 +56,13 @@ const getCurrentUser = async (req, res, next) => {
     if (!user) {
       throw new NotFoundError('Пользователь не найден');
     }
-
-    res.status(200).send(user);
+    const { email, name, about, avatar } = user;
+    res.status(200).send({
+      email,
+      name,
+      about,
+      avatar,
+    });
   } catch (err) {
     next(err);
   }
@@ -104,14 +117,14 @@ const createUser = async (req, res, next) => {
   try {
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(password, salt);
-    const newUser = await User.create({
+    const { email, name, about, avatar } = await User.create({
       email,
       password: passwordHash,
       name,
       about,
       avatar,
     });
-    res.status(201).send(newUser);
+    res.status(201).send({ email, name, about, avatar });
   } catch (err) {
     next(
       err.name === 'ValidationError'
@@ -171,6 +184,7 @@ const updateAvatar = async (req, res, next) => {
 
 module.exports = {
   login,
+  logout,
   getCurrentUser,
   getAllUsers,
   getProfile,
