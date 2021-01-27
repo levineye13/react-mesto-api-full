@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser');
 const { celebrate, Joi, errors } = require('celebrate');
 const cors = require('cors');
 
-const { allowedCors, allowedMethods } = require('./utils/constants');
+const { allowedOrigins, allowedMethods } = require('./utils/constants');
 const { login, createUser } = require('./controllers/usersController');
 const { cardsRouter } = require('./routes/cards');
 const { usersRouter } = require('./routes/users');
@@ -37,7 +37,7 @@ app.use(requestLogger);
 //Политика CORS
 app.use(
   cors({
-    origin: allowedCors,
+    origin: allowedOrigins,
     methods: allowedMethods,
     credentials: true,
   })

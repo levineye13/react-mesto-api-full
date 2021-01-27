@@ -1,6 +1,6 @@
 module.exports.regexpLink = /^https?:\/\/(www\.)?[\wа-яА-Я\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;=]+#?$/;
 
-module.exports.allowedCors = [
+module.exports.allowedOrigins = [
   'http://www.api.ilovemesto.students.nomoreparties.xyz',
   'http://api.ilovemesto.students.nomoreparties.xyz',
   'https://www.api.ilovemesto.students.nomoreparties.xyz',
@@ -11,4 +11,4 @@ module.exports.allowedCors = [
   'https://www.ilovemesto.students.nomoreparties.xyz',
 ];
 
-module.exports.allowedMethods = 'GET,PUT,PATCH,POST,DELETE,OPTIONS';
+module.exports.allowedMethods = 'HEAD,GET,PUT,PATCH,POST,DELETE,OPTIONS';
