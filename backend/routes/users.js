@@ -2,6 +2,7 @@ const usersRouter = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 const {
   logout,
+  checkAuth,
   getCurrentUser,
   getAllUsers,
   getProfile,
@@ -9,6 +10,10 @@ const {
   updateAvatar,
 } = require('./../controllers/usersController.js');
 const { regexpLink } = require('../utils/constants.js');
+
+usersRouter.head('/signout', logout);
+
+usersRouter.head('users/me', checkAuth);
 
 usersRouter.get('/users', getAllUsers);
 
@@ -23,8 +28,6 @@ usersRouter.get(
   }),
   getProfile
 );
-
-usersRouter.delete('/signout', logout);
 
 usersRouter.patch(
   '/users/me',

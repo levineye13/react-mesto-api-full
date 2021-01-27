@@ -26,6 +26,7 @@ const login = async (req, res, next) => {
     );
 
     res
+      .status(204)
       .cookie('jwt', `Bearer ${token}`, {
         maxAge: 3600000 * 24 * 7,
         httpOnly: true,
@@ -37,9 +38,22 @@ const login = async (req, res, next) => {
   }
 };
 
-const logout = async (req, res, next) => {
+const logout = (req, res, next) => {
   try {
-    res.clearCookie('jwt');
+    res.status(204).clearCookie('jwt').end();
+  } catch (err) {
+    next(err);
+  }
+};
+
+const checkAuth = async (req, res, next) => {
+  const { _id } = req.user;
+
+  try {
+    if (!_id) {
+      throw new UnauthorizedError('Требуется авторизация');
+    }
+    res.status(204).end();
   } catch (err) {
     next(err);
   }
@@ -117,14 +131,19 @@ const createUser = async (req, res, next) => {
   try {
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(password, salt);
-    const { email, name, about, avatar } = await User.create({
+    const user = await User.create({
       email,
       password: passwordHash,
       name,
       about,
       avatar,
     });
-    res.status(201).send({ email, name, about, avatar });
+    res.status(201).send({
+      email: user.email,
+      name: user.name,
+      about: user.about,
+      avatar: user.avatar,
+    });
   } catch (err) {
     next(
       err.name === 'ValidationError'
@@ -185,6 +204,7 @@ const updateAvatar = async (req, res, next) => {
 module.exports = {
   login,
   logout,
+  checkAuth,
   getCurrentUser,
   getAllUsers,
   getProfile,
