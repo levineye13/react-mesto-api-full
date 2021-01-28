@@ -70,12 +70,12 @@ const getCurrentUser = async (req, res, next) => {
     if (!user) {
       throw new NotFoundError('Пользователь не найден');
     }
-    const { email, name, about, avatar } = user;
     res.status(200).send({
-      email,
-      name,
-      about,
-      avatar,
+      _id: user._id,
+      email: user.email,
+      name: user.name,
+      about: user.about,
+      avatar: user.avatar,
     });
   } catch (err) {
     next(err);
