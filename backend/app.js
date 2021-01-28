@@ -15,11 +15,11 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const handleError = require('./middlewares/handleError');
 const { BadRequestError, UnauthorizedError } = require('./errors/errors');
 
-const { PORT } = process.env;
+const { PORT, MONGO_DB_IP, MONGO_DB_PORT, MONGO_DB_NAME } = process.env;
 
 const app = express();
 
-mongoose.connect('mongodb://localhost:27017/mestodb-15', {
+mongoose.connect(`mongodb://${MONGO_DB_IP}:${MONGO_DB_PORT}/${MONGO_DB_NAME}`, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
