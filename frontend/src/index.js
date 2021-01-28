@@ -6,7 +6,7 @@ import './index.css';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Router basename="/react-mesto-auth">
+    <Router>
       <App />
     </Router>
   </React.StrictMode>,

@@ -1,3 +1,3 @@
-export const signIn = '/sign-in';
-export const signUp = '/sign-up';
+export const signIn = '/signin';
+export const signUp = '/signup';
 export const JWT = 'jwt';
