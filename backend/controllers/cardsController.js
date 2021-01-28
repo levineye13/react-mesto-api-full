@@ -2,8 +2,11 @@ const Card = require('./../models/card');
 const { NotFoundError, BadRequestError } = require('./../errors/errors');
 
 /**
+ * Функция возвращает все карточки.
+ *
  * @param  {Object} req - объект запроса к серверу
  * @param  {Object} res - объект ответа сервера
+ * @param  {Function} next - функция промежуточной обработки
  */
 const getCards = async (req, res, next) => {
   try {
@@ -18,9 +21,11 @@ const getCards = async (req, res, next) => {
 };
 
 /**
- * Функция добавления карточки
+ * Функция добавления карточки.
+ *
  * @param  {Object} req - объект запроса к серверу
  * @param  {Object} res - объект ответа сервера
+ * @param  {Function} next - функция промежуточной обработки
  */
 const createCard = async (req, res, next) => {
   const { name, link } = req.body;
@@ -39,9 +44,11 @@ const createCard = async (req, res, next) => {
 };
 
 /**
- * Функция удаления карточки
+ * Функция удаления карточки.
+ *
  * @param  {Object} req - объект запроса к серверу
  * @param  {Object} res - объект ответа сервера
+ * @param  {Function} next - функция промежуточной обработки
  */
 const deleteCard = async (req, res, next) => {
   const { cardId } = req.params;
@@ -58,9 +65,11 @@ const deleteCard = async (req, res, next) => {
 };
 
 /**
- * Функция лайка карточки
+ * Функция лайка карточки.
+ *
  * @param  {Object} req - объект запроса к серверу
  * @param  {Object} res - объект ответа сервера
+ * @param  {Function} next - функция промежуточной обработки
  */
 const likeCard = async (req, res, next) => {
   const { _id } = req.user;
@@ -82,9 +91,11 @@ const likeCard = async (req, res, next) => {
 };
 
 /**
- * Функция дизлайка карточки
+ * Функция дизлайка карточки.
+ *
  * @param  {Object} req - объект запроса к серверу
  * @param  {Object} res - объект ответа сервера
+ * @param  {Function} next - функция промежуточной обработки
  */
 const dislikeCard = async (req, res, next) => {
   const { _id } = req.user;

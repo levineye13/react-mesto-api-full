@@ -3,6 +3,15 @@ const jwt = require('jsonwebtoken');
 
 const { UnauthorizedError } = require('../errors/errors');
 
+/**
+ * Мидлвар проверки авторизованности пользователя.
+ * Если куки переданы и они корректны, то извлекает id и записывает в запрос
+ * для использования остальными обработчиками.
+ *
+ * @param  {Object} req - объект запроса к серверу
+ * @param  {Object} res - объект ответа сервера
+ * @param  {Function} next - функция промежуточной обработки
+ */
 module.exports = (req, res, next) => {
   const { jwt: JWT } = req.cookies;
 

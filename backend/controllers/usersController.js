@@ -8,6 +8,15 @@ const {
   BadRequestError,
 } = require('./../errors/errors');
 
+/**
+ * Функция авторизации.
+ *
+ * @param  {Object} req - объект запроса к серверу
+ * @param  {Object} res - объект ответа сервера
+ * @param  {Function} next - функция промежуточной обработки
+ *
+ * @returns Cookie httpOnly
+ */
 const login = async (req, res, next) => {
   const { email, password } = req.body;
 
@@ -38,6 +47,13 @@ const login = async (req, res, next) => {
   }
 };
 
+/**
+ * Функция выхода из системы. Просто очищает куки.
+ *
+ * @param  {Object} req - объект запроса к серверу
+ * @param  {Object} res - объект ответа сервера
+ * @param  {Function} next - функция промежуточной обработки
+ */
 const logout = (req, res, next) => {
   try {
     res.status(204).clearCookie('jwt').end();
@@ -46,6 +62,14 @@ const logout = (req, res, next) => {
   }
 };
 
+/**
+ * Функция проверяет, авторизован ли пользователь.
+ * Метод http HEAD. Если пользователь авторизован (имеется поле _id), возвращает только статус 204.
+ *
+ * @param  {Object} req - объект запроса к серверу
+ * @param  {Object} res - объект ответа сервера
+ * @param  {Function} next - функция промежуточной обработки
+ */
 const checkAuth = async (req, res, next) => {
   const { _id } = req.user;
 
@@ -59,6 +83,13 @@ const checkAuth = async (req, res, next) => {
   }
 };
 
+/**
+ * Функция возвращает данные текущего пользователя.
+ *
+ * @param  {Object} req - объект запроса к серверу
+ * @param  {Object} res - объект ответа сервера
+ * @param  {Function} next - функция промежуточной обработки
+ */
 const getCurrentUser = async (req, res, next) => {
   const { _id } = req.user;
 
@@ -83,8 +114,11 @@ const getCurrentUser = async (req, res, next) => {
 };
 
 /**
+ * Функция возвращает всех пользователей.
+ *
  * @param  {Object} req - объект запроса к серверу
  * @param  {Object} res - объект ответа сервера
+ * @param  {Function} next - функция промежуточной обработки
  */
 const getAllUsers = async (req, res, next) => {
   try {
@@ -99,8 +133,11 @@ const getAllUsers = async (req, res, next) => {
 };
 
 /**
+ * Функция возвращает пользователя по id.
+ *
  * @param  {Object} req - объект запроса к серверу
  * @param  {Object} res - объект ответа сервера
+ * @param  {Function} next - функция промежуточной обработки
  */
 const getProfile = async (req, res, next) => {
   const { userId } = req.params;
@@ -116,9 +153,11 @@ const getProfile = async (req, res, next) => {
 };
 
 /**
- * Функция добавления пользователя
+ * Функция добавления пользователя.
+ *
  * @param  {Object} req - объект запроса к серверу
  * @param  {Object} res - объект ответа сервера
+ * @param  {Function} next - функция промежуточной обработки
  */
 const createUser = async (req, res, next) => {
   const {
@@ -157,6 +196,7 @@ const createUser = async (req, res, next) => {
  * Функция обновления профиля
  * @param  {Object} req - объект запроса к серверу
  * @param  {Object} res - объект ответа сервера
+ * @param  {Function} next - функция промежуточной обработки
  */
 const updateProfile = async (req, res, next) => {
   const { _id } = req.user;
@@ -179,8 +219,10 @@ const updateProfile = async (req, res, next) => {
 
 /**
  * Функция обновления аватара
+ *
  * @param  {Object} req - объект запроса к серверу
  * @param  {Object} res - объект ответа сервера
+ * @param  {Function} next - функция промежуточной обработки
  */
 const updateAvatar = async (req, res, next) => {
   const { _id } = req.user;
