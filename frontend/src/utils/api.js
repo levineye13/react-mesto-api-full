@@ -1,7 +1,8 @@
 class Api {
-  constructor({ baseUrl, headers }) {
+  constructor({ baseUrl, headers, extraOptions }) {
     this._baseUrl = baseUrl;
     this._headers = headers;
+    this._extraOptions = extraOptions;
   }
 
   /**
@@ -9,11 +10,15 @@ class Api {
    *
    * @param  {Object} res - объект ответа сервера
    */
-  _checkResponceStatus = async (res) => {
+  _handleResponceWithBody = async (res) => {
     if (res.ok) {
       return res.json();
     }
     throw new Error(`Ошибка: ${res.status} - ${res.statusText}`);
+  };
+
+  _handleResponceWithoutBody = (res) => {
+    return res.ok ? true : false;
   };
 
   /**
@@ -21,14 +26,15 @@ class Api {
    *
    * @return {Object}
    */
-  getUserInfo = async () => {
+  getUser = async () => {
     try {
       const res = await fetch(`${this._baseUrl}/users/me`, {
         method: 'GET',
+        ...this._extraOptions,
         headers: this._headers,
       });
 
-      return this._checkResponceStatus(res);
+      return this._handleResponceWithBody(res);
     } catch (err) {
       console.error(err);
     }
@@ -43,23 +49,29 @@ class Api {
     try {
       const res = await fetch(`${this._baseUrl}/cards`, {
         method: 'GET',
+        ...this._extraOptions,
         headers: this._headers,
       });
 
-      return this._checkResponceStatus(res);
+      return this._handleResponceWithBody(res);
     } catch (err) {
       console.error(err);
     }
   };
 
   getAllInitialData = async () => {
-    return Promise.allSettled([this.getUserInfo(), this.getInitialCards()]);
+    return Promise.allSettled([this.getUser(), this.getInitialCards()]);
   };
 
-  setUserInfo = async ({ name, about }) => {
+  getInitialData = async () => {
+    return Promise.all([this.getUser(), this.getInitialCards()]);
+  };
+
+  setUser = async ({ name, about }) => {
     try {
       const res = await fetch(`${this._baseUrl}/users/me`, {
         method: 'PATCH',
+        ...this._extraOptions,
         headers: this._headers,
 
         body: JSON.stringify({
@@ -67,7 +79,7 @@ class Api {
           about,
         }),
       });
-      return this._checkResponceStatus(res);
+      return this._handleResponceWithBody(res);
     } catch (err) {
       console.error(err);
     }
@@ -77,6 +89,7 @@ class Api {
     try {
       const res = await fetch(`${this._baseUrl}/cards`, {
         method: 'POST',
+        ...this._extraOptions,
         headers: this._headers,
 
         body: JSON.stringify({
@@ -84,7 +97,7 @@ class Api {
           link,
         }),
       });
-      return this._checkResponceStatus(res);
+      return this._handleResponceWithBody(res);
     } catch (err) {
       console.error(err);
     }
@@ -94,9 +107,10 @@ class Api {
     try {
       const res = await fetch(`${this._baseUrl}/cards/${cardId}`, {
         method: 'DELETE',
+        ...this._extraOptions,
         headers: this._headers,
       });
-      return this._checkResponceStatus(res);
+      return this._handleResponceWithBody(res);
     } catch (err) {
       console.error(err);
     }
@@ -106,9 +120,10 @@ class Api {
     try {
       const res = await fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
         method: methodHTTP,
+        ...this._extraOptions,
         headers: this._headers,
       });
-      return this._checkResponceStatus(res);
+      return this._handleResponceWithBody(res);
     } catch (err) {
       console.error(err);
     }
@@ -118,13 +133,13 @@ class Api {
     try {
       const res = await fetch(`${this._baseUrl}/users/me/avatar`, {
         method: 'PATCH',
+        ...this._extraOptions,
         headers: this._headers,
-
         body: JSON.stringify({
           avatar,
         }),
       });
-      return this._checkResponceStatus(res);
+      return this._handleResponceWithBody(res);
     } catch (err) {
       console.error(err);
     }
@@ -134,13 +149,14 @@ class Api {
     try {
       const res = await fetch(`${this._baseUrl}/signup`, {
         method: 'POST',
+        ...this._extraOptions,
         headers: this._headers,
         body: JSON.stringify({
           email,
           password,
         }),
       });
-      return this._checkResponceStatus(res);
+      return this._handleResponceWithBody(res);
     } catch (err) {
       console.error(`${err.name} - ${err.message}`);
     }
@@ -148,25 +164,55 @@ class Api {
 
   authorize = async ({ email, password }) => {
     try {
-      await fetch(`${this._baseUrl}/signin`, {
+      const res = await fetch(`${this._baseUrl}/signin`, {
         method: 'POST',
+        ...this._extraOptions,
         headers: this._headers,
         body: JSON.stringify({
           email,
           password,
         }),
       });
+      return this._handleResponceWithoutBody(res);
     } catch (err) {
-      console.error(`${err.name} - ${err.message}`);
+      console.error(err);
+    }
+  };
+
+  unauthorize = async () => {
+    try {
+      const res = await fetch(`${this._baseUrl}/signout`, {
+        method: 'HEAD',
+        ...this._extraOptions,
+        headers: this._headers,
+      });
+      return this._handleResponceWithoutBody(res);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  checkAuth = async () => {
+    try {
+      const res = await fetch(`${this._baseUrl}/users/me`, {
+        method: 'HEAD',
+        ...this._extraOptions,
+        headers: this._headers,
+      });
+      return this._handleResponceWithoutBody(res);
+    } catch (err) {
+      console.error(err);
     }
   };
 }
 
 //Экземпляр Api для осуществления запросов к серверу
 export const api = new Api({
-  //baseUrl: 'http://localhost:3000',
-  baseUrl: 'http://api.ilovemesto.students.nomoreparties.xyz',
+  baseUrl: 'https://www.api.ilovemesto.students.nomoreparties.xyz',
   headers: {
     'Content-Type': 'application/json',
+  },
+  extraOptions: {
+    credentials: 'include',
   },
 });
