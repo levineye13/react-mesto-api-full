@@ -1,20 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useHistory, useLocation } from 'react-router-dom';
-import { JWT, signIn, signUp } from '../utils/constants.js';
+import { Link, useLocation } from 'react-router-dom';
+import { signIn, signUp } from '../utils/constants.js';
 import headerLogo from '../images/header__logo.svg';
 
-const Header = ({ loggedIn, setLoggedIn, email }) => {
+const Header = ({ loggedIn, email, onUnauthorization }) => {
   const { pathname: path } = useLocation();
-  const history = useHistory();
   const [text, setText] = useState('');
   const [url, setUrl] = useState('');
   const [isActiveButtonMenu, setActiveButtonMenu] = useState(false);
-
-  const signOut = () => {
-    setLoggedIn(false);
-    history.push(signIn);
-    localStorage.removeItem(JWT);
-  };
 
   const toggleButtonMenuState = () => {
     setActiveButtonMenu(!isActiveButtonMenu);
@@ -62,7 +55,7 @@ const Header = ({ loggedIn, setLoggedIn, email }) => {
           ) : (
             <button
               className="header__button-output"
-              onClick={signOut}
+              onClick={async () => await onUnauthorization()}
               type="button"
             >
               Выйти

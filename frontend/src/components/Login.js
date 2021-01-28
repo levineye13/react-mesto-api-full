@@ -2,7 +2,7 @@ import React from 'react';
 import PopupWithForm from './PopupWithForm';
 import { useFormWithValidation } from '../hooks/useFormWithValidation';
 
-const Login = ({ onAuthorization, onCheckToken }) => {
+const Login = ({ onAuthorization, setData }) => {
   const {
     values,
     handleInputChange,
@@ -17,8 +17,7 @@ const Login = ({ onAuthorization, onCheckToken }) => {
       password: values.password,
       email: values.email,
     });
-    //после авторизации проверяем токен и устанавливаем данные
-    await onCheckToken();
+    await setData();
   };
 
   const markup = (

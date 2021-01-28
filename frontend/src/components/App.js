@@ -15,7 +15,7 @@ import InfoTooltip from './InfoTooltip';
 import { api } from '../utils/api';
 import { CurrentUserContext } from './../contexts/CurrentUserContext';
 import avatarImg from './../images/profile__avatar.jpg';
-import { JWT, signIn, signUp } from '../utils/constants';
+import { signIn, signUp } from '../utils/constants';
 import { splitDataArray } from '../utils/utils';
 
 const App = () => {
@@ -41,7 +41,8 @@ const App = () => {
   });
 
   /**
-   * Обработчик открытия попапа c всплывающей подсказкой
+   * Обработчик открытия попапа c всплывающей подсказкой.
+   *
    * @param  {Boolean} isSuccessful - успешность регистрации
    */
   const handleInfoTooltipOpen = (isSuccessful) => {
@@ -83,7 +84,8 @@ const App = () => {
   };
 
   /**
-   * Обработчик закрытия попапа кликом по экрану
+   * Обработчик закрытия попапа кликом по экрану.
+   *
    * @param  {Object} {target} - event target
    */
   const handleScreenClickClose = ({ target }) => {
@@ -100,7 +102,8 @@ const App = () => {
   };
 
   /**
-   * Обработчик удаления карточки по клику на кнопку
+   * Обработчик удаления карточки по клику на кнопку.
+   *
    * @param  {Object} card - карточка
    */
   const handleDeleteButtonClick = (card) => {
@@ -109,13 +112,15 @@ const App = () => {
   };
 
   /**
-   * Обработчик обновления информации о пользователе
+   * Обработчик обновления информации о пользователе.
+   *
    * @param  {String} name - никнейм пользователя
    * @param  {String} about - дополнительная информация о пользователе
+   * @async
    */
   const handleUpdateUser = async ({ name, about }) => {
     try {
-      const res = await api.setUserInfo({ name, about });
+      const res = await api.setUser({ name, about });
       if (res) {
         setCurrentUser(res);
       }
@@ -127,8 +132,10 @@ const App = () => {
   };
 
   /**
-   * Обработчик обновления аватарки
+   * Обработчик обновления аватарки.
+   *
    * @param  {String} {avatar} - ссылка на картинку
+   * @async
    */
   const handleUpdateAvatar = async ({ avatar }) => {
     try {
@@ -144,8 +151,10 @@ const App = () => {
   };
 
   /**
-   * Обработчик лайка/дислайка карточки
+   * Обработчик лайка/дислайка карточки.
+   *
    * @param  {Object} card - карточка
+   * @async
    */
   const handleCardLike = async (card, isLiked) => {
     try {
@@ -167,8 +176,10 @@ const App = () => {
   };
 
   /**
-   * Обработчик удаления карточки
+   * Обработчик удаления карточки.
+   *
    * @param  {Object} card - карточка
+   * @async
    */
   const handleCardDelete = async (card) => {
     try {
@@ -186,9 +197,11 @@ const App = () => {
   };
 
   /**
-   * Обработчик добавления карточки
+   * Обработчик добавления карточки.
+   *
    * @param  {String} name - название места
    * @param  {String} link - ссылка на картинку
+   * @async
    */
   const handleAddPlaceSubmit = async ({ name, link }) => {
     try {
@@ -203,14 +216,40 @@ const App = () => {
     }
   };
 
+  const setAuthorization = ({ isLoggedIn, path }) => {
+    setLoggedIn(isLoggedIn);
+    history.push(path);
+  };
+
   /**
-   * Обработчик авторизации пользователя
+   * Обработчик авторизации пользователя.
+   *
    * @param  {String} password
    * @param  {String} email
+   * @async
    */
   const handleAuthorization = async ({ password, email }) => {
     try {
-      await api.authorize({ password, email });
+      const res = await api.authorize({ password, email });
+      if (res) {
+        setAuthorization({ isLoggedIn: true, path: '/' });
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  /**
+   * Функция логаута пользователя.
+   *
+   * @async
+   */
+  const handleUnauthorization = async () => {
+    try {
+      const res = await api.unauthorize();
+      if (res) {
+        setAuthorization({ isLoggedIn: false, path: signIn });
+      }
     } catch (err) {
       console.error(err);
     }
@@ -218,8 +257,10 @@ const App = () => {
 
   /**
    * Обработчик регистрации пользователя
+   *
    * @param  {String} password
    * @param  {String} email
+   * @async
    */
   const handleRegistration = async ({ email, password }) => {
     try {
@@ -237,21 +278,20 @@ const App = () => {
   };
 
   /**
-   * Обработчик проверки токена и отрисовки данных
+   * Функция установки данных о пользователе и карточках.
+   * Используется Promise.allSettled, чтобы отобразить все успешные промисы.
+   *
+   * @async
    */
-  const handleCheckToken = async () => {
+  const setData = async () => {
     try {
       const data = await api.getAllInitialData();
-      const [dataUser, dataCards] = splitDataArray(data);
-      if (dataUser) {
-        setCurrentUser(dataUser);
+      const [userInfo, cardsInfo] = splitDataArray(data);
+      if (userInfo) {
+        setCurrentUser(userInfo);
       }
-      if (dataCards) {
-        setCards(dataCards);
-      }
-      if (dataUser || dataCards) {
-        setLoggedIn(true);
-        history.push('/');
+      if (cardsInfo) {
+        setCards(cardsInfo);
       }
     } catch (err) {
       console.error(err);
@@ -259,33 +299,16 @@ const App = () => {
   };
 
   /**
-   * Эффект, выполняющий авторизацию пользователя при монтировании,
-   * если токен прошел проверку
-   */
-  useEffect(() => {
-    const fetchData = async () => {
-      await handleCheckToken();
-    };
-
-    fetchData();
-  }, []);
-
-  /**
-   * Отрисовка первоначальных данных при монтировании компонента.
-   * (Promise.allSettled)
+   * Отрисовка первоначальных данных при монтировании компонента,
+   * если пользователь авторизован.
    */
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const dataArray = await api.getAllInitialData();
-        const [dataUser, dataCards] = splitDataArray(dataArray);
-
-        if (dataUser) {
-          setCurrentUser(dataUser);
-        }
-
-        if (dataCards) {
-          setCards(dataCards);
+        const res = await api.checkAuth();
+        if (res) {
+          await setData();
+          setAuthorization({ isLoggedIn: true, path: '/' });
         }
       } catch (err) {
         console.error(err);
@@ -318,13 +341,11 @@ const App = () => {
             loggedIn={loggedIn}
             setLoggedIn={setLoggedIn}
             email={currentUser.email}
+            onUnauthorization={handleUnauthorization}
           />
           <Switch>
             <Route path={signIn}>
-              <Login
-                onAuthorization={handleAuthorization}
-                onCheckToken={handleCheckToken}
-              />
+              <Login onAuthorization={handleAuthorization} setData={setData} />
             </Route>
             <Route path={signUp}>
               <Register onRegistration={handleRegistration} />
