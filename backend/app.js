@@ -12,8 +12,9 @@ const { cardsRouter } = require('./routes/cards');
 const { usersRouter } = require('./routes/users');
 const auth = require('./middlewares/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const { limiter } = require('./middlewares/rateLimiter');
 const handleError = require('./middlewares/handleError');
-const { BadRequestError, UnauthorizedError } = require('./errors/errors');
+const { BadRequestError } = require('./errors/errors');
 
 const { PORT, MONGO_DB_IP, MONGO_DB_PORT, MONGO_DB_NAME } = process.env;
 
@@ -24,6 +25,9 @@ mongoose.connect(`mongodb://${MONGO_DB_IP}:${MONGO_DB_PORT}/${MONGO_DB_NAME}`, {
   useCreateIndex: true,
   useFindAndModify: false,
 });
+
+//Ограничение количества запросов
+app.use(limiter);
 
 //Парсер кук
 app.use(cookieParser());
