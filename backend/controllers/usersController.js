@@ -160,13 +160,7 @@ const getProfile = async (req, res, next) => {
  * @param  {Function} next - функция промежуточной обработки
  */
 const createUser = async (req, res, next) => {
-  const {
-    email,
-    password,
-    name = 'Жак-Ив Кусто',
-    about = 'Исследователь',
-    avatar = 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
-  } = req.body;
+  const { email, password, name, about, avatar } = req.body;
   try {
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(password, salt);
