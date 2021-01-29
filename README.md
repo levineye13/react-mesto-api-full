@@ -1,7 +1,11 @@
 # Место
 
-> [Сайт](http://www.ilovemesto.students.nomoreparties.xyz)  
-> [Сервер](http://www.api.ilovemesto.students.nomoreparties.xyz)
+> [Сайт](http://www.ilovemesto.students.nomoreparties.xyz)
+
+> **Сервер**
+>
+> - Домен [http://www.api.ilovemesto.students.nomoreparties.xyz](http://www.api.ilovemesto.students.nomoreparties.xyz)
+> - IP [http://84.201.149.104](http://84.201.149.104)
 
 ## Технологии
 
