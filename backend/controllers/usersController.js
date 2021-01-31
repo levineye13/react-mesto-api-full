@@ -6,6 +6,7 @@ const {
   NotFoundError,
   UnauthorizedError,
   BadRequestError,
+  ConflictError,
 } = require('../errors/errors');
 
 /**
@@ -31,7 +32,7 @@ const login = async (req, res, next) => {
       NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
       {
         expiresIn: '7d',
-      },
+      }
     );
 
     res
@@ -160,13 +161,15 @@ const getProfile = async (req, res, next) => {
  * @param  {Function} next - функция промежуточной обработки
  */
 const createUser = async (req, res, next) => {
-  const {
-    email, password, name, about, avatar,
-  } = req.body;
+  const { email, password, name, about, avatar } = req.body;
   try {
+    const user = await User.findOne({ email });
+    if (user) {
+      throw new ConflictError('Такой пользователь уже существует');
+    }
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(password, salt);
-    const user = await User.create({
+    const newUser = await User.create({
       email,
       password: passwordHash,
       name,
@@ -174,16 +177,16 @@ const createUser = async (req, res, next) => {
       avatar,
     });
     res.status(201).send({
-      email: user.email,
-      name: user.name,
-      about: user.about,
-      avatar: user.avatar,
+      email: newUser.email,
+      name: newUser.name,
+      about: newUser.about,
+      avatar: newUser.avatar,
     });
   } catch (err) {
     next(
       err.name === 'ValidationError'
         ? new BadRequestError('Переданы некорректные данные')
-        : err,
+        : err
     );
   }
 };
@@ -201,14 +204,14 @@ const updateProfile = async (req, res, next) => {
     const updatedProfile = await User.findByIdAndUpdate(
       _id,
       { name, about },
-      { new: true, runValidators: true },
+      { new: true, runValidators: true }
     );
     res.status(200).send(updatedProfile);
   } catch (err) {
     next(
       err.name === 'ValidationError'
         ? new BadRequestError('Переданы некорректные данные')
-        : err,
+        : err
     );
   }
 };
@@ -227,14 +230,14 @@ const updateAvatar = async (req, res, next) => {
     const updatedAvatar = await User.findByIdAndUpdate(
       _id,
       { avatar },
-      { new: true, runValidators: true },
+      { new: true, runValidators: true }
     );
     res.status(200).send(updatedAvatar);
   } catch (err) {
     next(
       err.name === 'ValidationError'
         ? new BadRequestError('Переданы некорректные данные')
-        : err,
+        : err
     );
   }
 };
