@@ -23,10 +23,10 @@ usersRouter.get(
   '/users/:userId',
   celebrate({
     params: Joi.object().keys({
-      userId: Joi.string().required().alphanum(),
+      userId: Joi.string().required().alphanum().length(24),
     }),
   }),
-  getProfile,
+  getProfile
 );
 
 usersRouter.patch(
@@ -37,7 +37,7 @@ usersRouter.patch(
       about: Joi.string().min(2).max(30),
     }),
   }),
-  updateProfile,
+  updateProfile
 );
 
 usersRouter.patch(
@@ -47,7 +47,7 @@ usersRouter.patch(
       avatar: Joi.string().pattern(regexpLink),
     }),
   }),
-  updateAvatar,
+  updateAvatar
 );
 
 module.exports = { usersRouter };
