@@ -201,7 +201,7 @@ const updateProfile = async (req, res, next) => {
     const updatedProfile = await User.findByIdAndUpdate(
       _id,
       { name, about },
-      { new: true, runValidators: true, upsert: true },
+      { new: true, runValidators: true },
     );
     res.status(200).send(updatedProfile);
   } catch (err) {
@@ -227,7 +227,7 @@ const updateAvatar = async (req, res, next) => {
     const updatedAvatar = await User.findByIdAndUpdate(
       _id,
       { avatar },
-      { new: true, runValidators: true, upsert: true },
+      { new: true, runValidators: true },
     );
     res.status(200).send(updatedAvatar);
   } catch (err) {
