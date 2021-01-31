@@ -10,7 +10,6 @@ const {
   regexpLink,
   allowedOrigins,
   allowedMethods,
-  DEFAULT_USER_INFO: { name, about, avatar },
 } = require('./utils/constants');
 const { login, createUser } = require('./controllers/usersController');
 const { cardsRouter } = require('./routes/cards');
@@ -67,9 +66,9 @@ app.post(
     body: Joi.object().keys({
       email: Joi.string().required().email(),
       password: Joi.string().required().min(8),
-      name: Joi.string().min(2).max(30).default(name),
-      about: Joi.string().min(2).max(30).default(about),
-      avatar: Joi.string().pattern(regexpLink).default(avatar),
+      name: Joi.string().min(2).max(30),
+      about: Joi.string().min(2).max(30),
+      avatar: Joi.string().pattern(regexpLink),
     }),
   }),
   createUser,

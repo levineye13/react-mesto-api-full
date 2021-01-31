@@ -33,8 +33,8 @@ usersRouter.patch(
   '/users/me',
   celebrate({
     body: Joi.object().keys({
-      name: Joi.string().min(2).max(30).default('Жак-Ив Кусто'),
-      about: Joi.string().min(2).max(30).default('Исследователь'),
+      name: Joi.string().min(2).max(30),
+      about: Joi.string().min(2).max(30),
     }),
   }),
   updateProfile,
@@ -44,11 +44,7 @@ usersRouter.patch(
   '/users/me/avatar',
   celebrate({
     body: Joi.object().keys({
-      avatar: Joi.string()
-        .pattern(regexpLink)
-        .default(
-          'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
-        ),
+      avatar: Joi.string().pattern(regexpLink),
     }),
   }),
   updateAvatar,
