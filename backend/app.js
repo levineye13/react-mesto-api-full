@@ -21,7 +21,9 @@ const { limiter } = require('./middlewares/rateLimiter');
 const handleError = require('./middlewares/handleError');
 const { BadRequestError } = require('./errors/errors');
 
-const { PORT, MONGO_DB_IP, MONGO_DB_PORT, MONGO_DB_NAME } = process.env;
+const {
+  PORT, MONGO_DB_IP, MONGO_DB_PORT, MONGO_DB_NAME,
+} = process.env;
 
 const app = express();
 
@@ -31,25 +33,25 @@ mongoose.connect(`mongodb://${MONGO_DB_IP}:${MONGO_DB_PORT}/${MONGO_DB_NAME}`, {
   useFindAndModify: false,
 });
 
-//Ограничение количества запросов
+// Ограничение количества запросов
 app.use(limiter);
 
-//Парсер кук
+// Парсер кук
 app.use(cookieParser());
 
-//Парсер тела запросов
+// Парсер тела запросов
 app.use(bodyParser.json());
 
-//Логгер запросов
+// Логгер запросов
 app.use(requestLogger);
 
-//Политика CORS
+// Политика CORS
 app.use(
   cors({
     origin: allowedOrigins,
     methods: allowedMethods,
     credentials: true,
-  })
+  }),
 );
 
 app.get('/crash-test', () => {
@@ -58,7 +60,7 @@ app.get('/crash-test', () => {
   }, 0);
 });
 
-//Регистрация
+// Регистрация
 app.post(
   '/signup',
   celebrate({
@@ -70,10 +72,10 @@ app.post(
       avatar: Joi.string().pattern(regexpLink).default(avatar),
     }),
   }),
-  createUser
+  createUser,
 );
 
-//Авторизация
+// Авторизация
 app.post(
   '/signin',
   celebrate({
@@ -82,29 +84,27 @@ app.post(
       password: Joi.string().required().min(8),
     }),
   }),
-  login
+  login,
 );
 
-//Проверка авторизации
+// Проверка авторизации
 app.use(auth);
 
 app.use(usersRouter);
 app.use(cardsRouter);
 
-//Возвращаем объект ошибки для всех остальных запросов
-app.all('*', (req, res) => {
+// Возвращаем объект ошибки для всех остальных запросов
+app.all('*', () => {
   throw new BadRequestError('Запрашиваемый ресурс не найден');
 });
 
-//Логгер ошибок
+// Логгер ошибок
 app.use(errorLogger);
 
-//Обработчик ошибок celebrate
+// Обработчик ошибок celebrate
 app.use(errors());
 
-//Централизованный обработчик ошибок
+// Централизованный обработчик ошибок
 app.use(handleError);
 
-app.listen(PORT, () => {
-  console.log(`Сервер запущен на порту ${PORT}`);
-});
+app.listen(PORT);

@@ -44,7 +44,7 @@ const userSchema = new Schema({
   },
 });
 
-userSchema.statics.findUserByCredentials = async function ({
+userSchema.statics.findUserByCredentials = async function findUserByCredentials({
   email,
   password,
 }) {

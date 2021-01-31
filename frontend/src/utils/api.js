@@ -208,7 +208,7 @@ class Api {
 
 //Экземпляр Api для осуществления запросов к серверу
 export const api = new Api({
-  baseUrl: 'https://www.api.ilovemesto.students.nomoreparties.xyz',
+  baseUrl: 'http://www.api.ilovemesto.students.nomoreparties.xyz',
   headers: {
     'Content-Type': 'application/json',
   },

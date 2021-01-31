@@ -8,7 +8,7 @@ const {
   getProfile,
   updateProfile,
   updateAvatar,
-} = require('./../controllers/usersController.js');
+} = require('../controllers/usersController.js');
 const { regexpLink } = require('../utils/constants.js');
 
 usersRouter.head('/signout', logout);
@@ -26,7 +26,7 @@ usersRouter.get(
       userId: Joi.string().required().alphanum(),
     }),
   }),
-  getProfile
+  getProfile,
 );
 
 usersRouter.patch(
@@ -37,7 +37,7 @@ usersRouter.patch(
       about: Joi.string().min(2).max(30).default('Исследователь'),
     }),
   }),
-  updateProfile
+  updateProfile,
 );
 
 usersRouter.patch(
@@ -47,11 +47,11 @@ usersRouter.patch(
       avatar: Joi.string()
         .pattern(regexpLink)
         .default(
-          'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png'
+          'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
         ),
     }),
   }),
-  updateAvatar
+  updateAvatar,
 );
 
 module.exports = { usersRouter };
