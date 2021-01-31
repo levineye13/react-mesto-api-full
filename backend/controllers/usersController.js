@@ -32,7 +32,7 @@ const login = async (req, res, next) => {
       NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
       {
         expiresIn: '7d',
-      }
+      },
     );
 
     res
@@ -149,7 +149,7 @@ const getProfile = async (req, res, next) => {
     }
     res.status(200).send(user);
   } catch (err) {
-    return err.name === 'CastError'
+    err.name === 'CastError'
       ? next(new BadRequestError('Переданы некорректные данные'))
       : next(err);
   }
@@ -163,7 +163,9 @@ const getProfile = async (req, res, next) => {
  * @param  {Function} next - функция промежуточной обработки
  */
 const createUser = async (req, res, next) => {
-  const { email, password, name, about, avatar } = req.body;
+  const {
+    email, password, name, about, avatar,
+  } = req.body;
   try {
     const user = await User.findOne({ email });
     if (user) {
@@ -188,7 +190,7 @@ const createUser = async (req, res, next) => {
     next(
       err.name === 'ValidationError'
         ? new BadRequestError('Переданы некорректные данные')
-        : err
+        : err,
     );
   }
 };
@@ -206,14 +208,14 @@ const updateProfile = async (req, res, next) => {
     const updatedProfile = await User.findByIdAndUpdate(
       _id,
       { name, about },
-      { new: true, runValidators: true }
+      { new: true, runValidators: true },
     );
     res.status(200).send(updatedProfile);
   } catch (err) {
     next(
       err.name === 'ValidationError'
         ? new BadRequestError('Переданы некорректные данные')
-        : err
+        : err,
     );
   }
 };
@@ -232,14 +234,14 @@ const updateAvatar = async (req, res, next) => {
     const updatedAvatar = await User.findByIdAndUpdate(
       _id,
       { avatar },
-      { new: true, runValidators: true }
+      { new: true, runValidators: true },
     );
     res.status(200).send(updatedAvatar);
   } catch (err) {
     next(
       err.name === 'ValidationError'
         ? new BadRequestError('Переданы некорректные данные')
-        : err
+        : err,
     );
   }
 };
