@@ -149,7 +149,9 @@ const getProfile = async (req, res, next) => {
     }
     res.status(200).send(user);
   } catch (err) {
-    next(err);
+    return err.name === 'CastError'
+      ? next(new BadRequestError('Переданы некорректные данные'))
+      : next(err);
   }
 };
 
