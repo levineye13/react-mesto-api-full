@@ -4,23 +4,6 @@ const { regexpLink } = require('../utils/constants');
 
 const { Schema } = mongoose;
 
-const ownerSchema = new Schema({
-  _id: {
-    type: Schema.Types.ObjectId,
-    ref: 'user',
-    required: true,
-  },
-});
-
-const likeSchema = new Schema({
-  _id: {
-    type: Schema.Types.ObjectId,
-    ref: 'user',
-    required: true,
-    default: [],
-  },
-});
-
 const cardSchema = new Schema({
   name: {
     type: String,
@@ -35,9 +18,18 @@ const cardSchema = new Schema({
       validator: (v) => regexpLink.test(v),
     },
   },
-  owner: ownerSchema,
+  owner: {
+    type: Schema.Types.ObjectId,
+    ref: 'user',
+    required: true,
+  },
   likes: [
-    { likeSchema },
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'user',
+      required: true,
+      default: [],
+    },
   ],
   crearedAt: {
     type: Date,
