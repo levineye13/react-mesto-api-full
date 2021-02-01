@@ -56,10 +56,11 @@ const deleteCard = async (req, res, next) => {
 
   try {
     const card = await Card.findById(cardId);
+    const ownerId = String(card.owner);
     if (!card) {
       throw new NotFoundError('Карточка не найдена');
     }
-    if (card.owner !== _id) {
+    if (ownerId !== _id) {
       throw new BadRequestError('Переданы некорректные данные');
     }
     const deletedCard = await Card.findByIdAndRemove(cardId);
