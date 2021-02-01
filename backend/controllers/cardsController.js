@@ -38,7 +38,7 @@ const createCard = async (req, res, next) => {
     next(
       err.name === 'ValidationError'
         ? new BadRequestError('Переданы некорректные данные')
-        : err,
+        : err
     );
   }
 };
@@ -52,12 +52,17 @@ const createCard = async (req, res, next) => {
  */
 const deleteCard = async (req, res, next) => {
   const { cardId } = req.params;
+  const { _id } = req.user;
 
   try {
-    const deletedCard = await Card.findByIdAndRemove(cardId);
-    if (!deletedCard) {
+    const card = await Card.findById(cardId);
+    if (!card) {
       throw new NotFoundError('Карточка не найдена');
     }
+    if (card.owner !== _id) {
+      throw new BadRequestError('Переданы некорректные данные');
+    }
+    const deletedCard = await Card.findByIdAndRemove(cardId);
     res.status(200).send(deletedCard);
   } catch (err) {
     next(err);
@@ -79,7 +84,7 @@ const likeCard = async (req, res, next) => {
     const updatedCard = await Card.findByIdAndUpdate(
       cardId,
       { $addToSet: { likes: _id } },
-      { new: true },
+      { new: true }
     );
     if (!updatedCard) {
       throw new NotFoundError('Карточка не найдена');
@@ -105,7 +110,7 @@ const dislikeCard = async (req, res, next) => {
     const updatedCard = await Card.findByIdAndUpdate(
       cardId,
       { $pull: { likes: _id } },
-      { new: true },
+      { new: true }
     );
     if (!updatedCard) {
       throw new NotFoundError('Карточка не найдена');
