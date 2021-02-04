@@ -10,7 +10,8 @@
   },
   "scripts": {
     "start": "node app.js",
-    "dev": "nodemon app.js"
+    "dev": "nodemon app.js",
+    "eslint": "npx eslint . --fix"
   },
   "author": "Oleg Zharov",
   "license": "ISC",
