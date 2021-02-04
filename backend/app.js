@@ -53,12 +53,6 @@ app.use(
   }),
 );
 
-app.get('/crash-test', () => {
-  setTimeout(() => {
-    throw new Error('Сервер сейчас упадёт');
-  }, 0);
-});
-
 // Регистрация
 app.post(
   '/signup',
