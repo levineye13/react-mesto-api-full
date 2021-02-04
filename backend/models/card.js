@@ -1,21 +1,21 @@
 const mongoose = require('mongoose');
-
-const { regexpLink } = require('../utils/constants');
+const validator = require('validator');
 
 const { Schema } = mongoose;
 
 const cardSchema = new Schema({
   name: {
     type: String,
-    required: true,
-    minlength: 2,
-    maxlength: 30,
+    required: [true, 'Поле "name" должно быть заполнено'],
+    minlength: [2, 'Минимальная длина поля "name" - 2'],
+    maxlength: [30, 'Максимальная длина поля "name" - 30'],
   },
   link: {
     type: String,
-    required: true,
+    required: [true, 'Поле "link" должно быть заполнено'],
     validate: {
-      validator: (v) => regexpLink.test(v),
+      validator: (v) => validator.isURL(v),
+      message: 'Поле "link" должно быть валидным url-адресом',
     },
   },
   owner: {
