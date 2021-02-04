@@ -1,6 +1,6 @@
 module.exports.regexpLink = /^https?:\/\/(www\.)?[\wа-яА-Я\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;=]+#?$/;
 
-module.exports.allowedOrigins = [
+const allowedOrigins = [
   'http://www.api.ilovemesto.students.nomoreparties.xyz',
   'http://api.ilovemesto.students.nomoreparties.xyz',
   'https://www.api.ilovemesto.students.nomoreparties.xyz',
@@ -11,4 +11,10 @@ module.exports.allowedOrigins = [
   'https://www.ilovemesto.students.nomoreparties.xyz',
 ];
 
-module.exports.allowedMethods = 'HEAD,GET,PUT,PATCH,POST,DELETE,OPTIONS';
+const allowedMethods = 'HEAD,GET,PUT,PATCH,POST,DELETE,OPTIONS';
+
+module.exports.corsConfig = {
+  origin: allowedOrigins,
+  methods: allowedMethods,
+  credentials: true,
+};

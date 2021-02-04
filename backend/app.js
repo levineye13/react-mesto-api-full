@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser');
 const { errors } = require('celebrate');
 const cors = require('cors');
 
-const { allowedOrigins, allowedMethods } = require('./utils/constants');
+const { corsConfig } = require('./utils/constants');
 const routes = require('./routes');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { limiter } = require('./middlewares/rateLimiter');
@@ -38,13 +38,7 @@ app.use(bodyParser.json());
 app.use(requestLogger);
 
 // Политика CORS
-app.use(
-  cors({
-    origin: allowedOrigins,
-    methods: allowedMethods,
-    credentials: true,
-  }),
-);
+app.use(cors(corsConfig));
 
 app.use(routes);
 
