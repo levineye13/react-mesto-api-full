@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 
 const { NODE_ENV, JWT_SECRET } = require('../config');
-const { UnauthorizedError } = require('../errors/errors');
+const { UnauthorizedError } = require('../errors');
 
 /**
  * Мидлвар проверки авторизованности пользователя.

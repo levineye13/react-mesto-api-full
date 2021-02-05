@@ -1,13 +1,14 @@
-const { NODE_ENV, JWT_SECRET } = process.env;
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
+
+const { NODE_ENV, JWT_SECRET } = require('../config');
 const {
   NotFoundError,
   UnauthorizedError,
   BadRequestError,
   ConflictError,
-} = require('../errors/errors');
+} = require('../errors');
 
 /**
  * Функция авторизации.

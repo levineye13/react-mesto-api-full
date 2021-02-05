@@ -1,5 +1,5 @@
 const Card = require('../models/card');
-const { NotFoundError, BadRequestError } = require('../errors/errors');
+const { NotFoundError, BadRequestError } = require('../errors');
 
 /**
  * Функция возвращает все карточки.

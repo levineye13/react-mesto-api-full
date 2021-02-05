@@ -10,7 +10,7 @@ const routes = require('./routes');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { limiter } = require('./middlewares/rateLimiter');
 const handleError = require('./middlewares/handleError');
-const { BadRequestError } = require('./errors/errors');
+const { BadRequestError } = require('./errors');
 
 const {
   PORT, MONGO_DB_IP, MONGO_DB_PORT, MONGO_DB_NAME,

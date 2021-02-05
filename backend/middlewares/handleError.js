@@ -1,4 +1,4 @@
-const { InternalServerError } = require('../errors/errors');
+const { InternalServerError } = require('../errors');
 
 /**
  * Централизованный обработчик ошибок приложения.
