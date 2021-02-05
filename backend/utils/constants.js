@@ -1,5 +1,3 @@
-module.exports.regexpLink = /^https?:\/\/(www\.)?[\wа-яА-Я\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;=]+#?$/;
-
 const allowedOrigins = [
   'http://www.api.ilovemesto.students.nomoreparties.xyz',
   'http://api.ilovemesto.students.nomoreparties.xyz',
