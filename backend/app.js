@@ -1,4 +1,3 @@
-require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -15,7 +14,7 @@ const { BadRequestError } = require('./errors/errors');
 
 const {
   PORT, MONGO_DB_IP, MONGO_DB_PORT, MONGO_DB_NAME,
-} = process.env;
+} = require('./config');
 
 const app = express();
 
@@ -23,6 +22,7 @@ mongoose.connect(`mongodb://${MONGO_DB_IP}:${MONGO_DB_PORT}/${MONGO_DB_NAME}`, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
+  useUnifiedTopology: true,
 });
 
 // Ограничение количества запросов
@@ -33,6 +33,7 @@ app.use(cookieParser());
 
 // Парсер тела запросов
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Логгер запросов
 app.use(requestLogger);
