@@ -66,7 +66,9 @@ const deleteCard = async (req, res, next) => {
     const deletedCard = await Card.findByIdAndRemove(id);
     res.status(200).send(deletedCard);
   } catch (err) {
-    next(err);
+    err.name === 'CastError'
+      ? next(new BadRequestError('Переданы некорректные данные'))
+      : next(err);
   }
 };
 
