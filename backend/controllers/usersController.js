@@ -138,9 +138,9 @@ const getAllUsers = async (req, res, next) => {
  * @param  {Function} next - функция промежуточной обработки
  */
 const getProfile = async (req, res, next) => {
-  const { userId } = req.params;
+  const { id } = req.params;
   try {
-    const user = await User.findById(userId);
+    const user = await User.findById(id);
     if (!user) {
       throw new NotFoundError('Пользователь не найден');
     }

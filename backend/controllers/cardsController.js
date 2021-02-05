@@ -51,11 +51,11 @@ const createCard = async (req, res, next) => {
  * @param  {Function} next - функция промежуточной обработки
  */
 const deleteCard = async (req, res, next) => {
-  const { cardId } = req.params;
+  const { id } = req.params;
   const { _id } = req.user;
 
   try {
-    const card = await Card.findById(cardId);
+    const card = await Card.findById(id);
     const ownerId = String(card.owner);
     if (!card) {
       throw new NotFoundError('Карточка не найдена');
@@ -63,7 +63,7 @@ const deleteCard = async (req, res, next) => {
     if (ownerId !== _id) {
       throw new BadRequestError('Переданы некорректные данные');
     }
-    const deletedCard = await Card.findByIdAndRemove(cardId);
+    const deletedCard = await Card.findByIdAndRemove(id);
     res.status(200).send(deletedCard);
   } catch (err) {
     next(err);
@@ -79,11 +79,11 @@ const deleteCard = async (req, res, next) => {
  */
 const likeCard = async (req, res, next) => {
   const { _id } = req.user;
-  const { cardId } = req.params;
+  const { id } = req.params;
 
   try {
     const updatedCard = await Card.findByIdAndUpdate(
-      cardId,
+      id,
       { $addToSet: { likes: _id } },
       { new: true },
     );
@@ -105,11 +105,11 @@ const likeCard = async (req, res, next) => {
  */
 const dislikeCard = async (req, res, next) => {
   const { _id } = req.user;
-  const { cardId } = req.params;
+  const { id } = req.params;
 
   try {
     const updatedCard = await Card.findByIdAndUpdate(
-      cardId,
+      id,
       { $pull: { likes: _id } },
       { new: true },
     );
