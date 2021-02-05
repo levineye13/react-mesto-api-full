@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 
-const { NODE_ENV, JWT_SECRET } = require('../config');
+const { JWT_SECRET } = require('../config');
 const {
   NotFoundError,
   UnauthorizedError,
@@ -28,13 +28,9 @@ const login = async (req, res, next) => {
     if (!user) {
       throw new UnauthorizedError('Неправильные почта или пароль');
     }
-    const token = jwt.sign(
-      { _id: user._id },
-      NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
-      {
-        expiresIn: '7d',
-      },
-    );
+    const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
+      expiresIn: '7d',
+    });
 
     res
       .status(204)
